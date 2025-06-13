@@ -1,0 +1,133 @@
+/* Navbar.css */
+.navbar {
+  background-color: var(--primary-color);
+  padding: 0.8rem 0; /* زيادة البادينج أفقي */
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative; /* عشان القائمة المنسدلة تكون مطلقة نسبة إليه */
+  animation: fadeInDown 0.5s linear;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.navbar-links {
+  list-style: none;
+  display: none; /* مخفية افتراضيًا للشاشات الصغيرة */
+  flex-direction: column;
+  background-color: var(--primary-color);
+  position: absolute;
+  top: 70px;
+  left: 10px;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  width: 180px;
+  margin: 0;
+}
+
+.navbar-links.open {
+  display: flex;
+}
+
+.navbar-links li {
+  margin-bottom: 1rem;
+}
+
+.navbar-links li:last-child {
+  margin-bottom: 0;
+}
+
+.navbar-links li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-links li a .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-links li a:hover,
+.login-icon:hover {
+  color: var(--secondary-color);
+}
+
+.login-icon {
+  display: none;
+}
+
+.menu-icon {
+  display: flex;
+  font-size: 1.8rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  gap: 15px;
+}
+.menu-icon a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* شاشات أكبر من أو تساوي 768 بكسل */
+@media (min-width: 768px) {
+  .menu-icon {
+    display: none; /* نخفي أيقونة القائمة */
+  }
+
+  .login-icon {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .navbar-links {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    background: none;
+    box-shadow: none;
+    width: auto;
+    padding: 0;
+    gap: 20px;
+  }
+
+  .navbar-links li {
+    margin-bottom: 0;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

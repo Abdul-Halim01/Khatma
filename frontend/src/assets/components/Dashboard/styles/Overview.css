@@ -1,0 +1,276 @@
+/* ====================
+   Welcome Section
+==================== */
+
+.overview .welcome-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  text-align: center;
+  width: 100%;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  text-align: center;
+  margin: 10px 0 35px 0;
+}
+/* ====================
+   ختماتي (My Khatemat)
+==================== */
+.myKh_container {
+  padding: 1.5rem;
+}
+
+.myKh_header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.myKh_icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.myKh_icon-inner {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.myKh_title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.myKh_subtitle {
+  color: #888;
+  font-size: 1rem;
+}
+
+.myKh_grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.myKh_card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.myKh_card:hover {
+  transform: translateY(-5px);
+}
+
+.myKh_card.dark {
+  background-color: #1e1e1e;
+  color: #eee;
+}
+
+.myKh_card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.myKh_type {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.myKh_type-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.myKh_type-icon.private {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.myKh_type-icon.public {
+  background-color: #1976d2;
+  color: white;
+}
+
+.myKh_icon-small {
+  font-size: 1rem;
+}
+
+.myKh_name {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.myKh_progress-note {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.myKh_exit-button {
+  background-color: transparent;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.myKh_exit-button:hover {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.myKh_progress-wrapper {
+  margin-top: 1rem;
+}
+
+.myKh_progress-bar-bg {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.myKh_progress-bar-fill {
+  height: 100%;
+  background-color: var(--color-available);
+  transition: width 0.3s ease;
+}
+
+.myKh_progress-text {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #555;
+  text-align: left;
+}
+
+/* ====================
+   Stats Section
+==================== */
+.stats-container {
+  margin-bottom: 2rem;
+}
+
+
+.stats-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(to right, #8b5cf6, #a855f7);
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  margin-bottom: 1rem;
+}
+
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.stats-card {
+  padding: 1.5rem;
+  border-radius: var(--border-radius12);
+  border: 1px solid var(--border-color);
+  background: var(--card-background);
+  transition: var(--transition);
+}
+
+.stats-card-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.stats-card .count {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.stats-card .label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Dark Mode Variants */
+.dark .stats-card.green {
+  background: linear-gradient(
+    to bottom right,
+    rgba(6, 95, 70, 0.3),
+    rgba(4, 120, 87, 0.2)
+  );
+  border-color: rgba(4, 120, 87, 0.3);
+}
+
+.dark .stats-card.blue {
+  background: linear-gradient(
+    to bottom right,
+    rgba(30, 64, 175, 0.3),
+    rgba(37, 99, 235, 0.2)
+  );
+  border-color: rgba(30, 64, 175, 0.3);
+}
+
+.dark .stats-card.purple {
+  background: linear-gradient(
+    to bottom right,
+    rgba(88, 28, 135, 0.3),
+    rgba(109, 40, 217, 0.2)
+  );
+  border-color: rgba(88, 28, 135, 0.3);
+}
+
+/* ====================
+   Responsive (Tablet & Desktop)
+==================== */
+@media (min-width: 640px) {
+  .myKh_grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .overview .welcome-section {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+
+  .overview .welcome-text {
+    text-align: left;
+  }
+
+  .myKh_container {
+    padding: 2rem 4rem;
+  }
+
+  .stats-container {
+    padding: 0 4rem;
+  }
+}

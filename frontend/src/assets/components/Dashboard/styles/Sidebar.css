@@ -1,0 +1,96 @@
+/* زر القائمة للهاتف */
+.mobile-menu-button {
+  display: block;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+}
+
+.mobile-menu-button button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+/* القائمة الجانبية (تبدأ مغلقة على الموبايل) */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100%;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-right: 1px solid var(--border-color);
+  transform: translateX(250%);
+  transition: transform 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.nav .header-user {
+  display: flex;
+  margin: 70px 0 10px 0;
+}
+.Dash-nav-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--border-radius12);
+  border: 1px solid transparent;
+  background: none;
+  color: var(--text-secondary);
+  text-align: right;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.Dash-nav-button:hover {
+  background-color: var(--table-hover);
+}
+
+.Dash-nav-button.active {
+  box-shadow: 0 2px 6px var(--shadow-light);
+  font-weight: 500;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+.label {
+  font-size: 1rem;
+}
+
+/* ✅ للـ Tablet وأعلى */
+@media (min-width: 768px) {
+  .mobile-menu-button {
+    display: none;
+  }
+  .nav .header-user {
+    display: none;
+  }
+  .sidebar {
+    position: sticky;
+    top: 6rem;
+    transform: translateX(0);
+    width: fit-content;
+    height: 100vh;
+    border-radius: var(--border-radius30);
+    backdrop-filter: blur(6px);
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border-color);
+  }
+}
