@@ -1,0 +1,322 @@
+/*=========================
+  2. Base Reset
+=========================*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/*=========================
+  3. Hero Section Layout
+=========================*/
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: var(--transition);
+  direction: rtl;
+  text-align: right;
+}
+
+.hero-section.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*=========================
+  4. Background + Overlay
+=========================*/
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--overlay-color);
+  z-index: -1;
+}
+
+/*=========================
+  5. Content
+=========================*/
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  width: 90%;
+  text-align: center;
+  padding: 2rem;
+}
+
+/*=========================
+  6. Text Styles
+=========================*/
+.hero-headline {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 700;
+  color: var(--background-light);
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
+  text-shadow: 0 4px 20px var(--shadow-medium);
+  letter-spacing: -0.01em;
+  font-family: "Amiri", "Times New Roman", serif;
+}
+
+.hero-subheading {
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  color: var(--border-color);
+  margin-bottom: 3rem;
+  line-height: 1.7;
+  max-width: 800px;
+  margin-inline: auto;
+  font-weight: 400;
+  font-family: "Noto Sans Arabic", sans-serif;
+}
+
+/*=========================
+  7. Buttons
+=========================*/
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: var(--border-radius30);
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  border: 2px solid transparent;
+  font-family: "Noto Sans Arabic", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-cta.primary {
+  background: var(--accent-color);
+  color: var(--primary-color);
+  border-color: var(--accent-color);
+}
+
+.hero-cta.primary:hover {
+  background: #ffed4e;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px var(--shadow-medium);
+}
+
+.hero-cta.secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.hero-cta.secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px var(--shadow-medium);
+}
+
+.hero-cta:active {
+  transform: translateY(0);
+}
+
+.cta-arrow {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.hero-cta:hover .cta-arrow {
+  transform: translateX(-5px);
+}
+
+/*=========================
+  8. Decorations
+=========================*/
+.hero-decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.decoration {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--decoration-color);
+  backdrop-filter: blur(10px);
+  animation: float 8s ease-in-out infinite;
+}
+
+.decoration-1 {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: -150px;
+  animation-delay: 0s;
+}
+
+.decoration-2 {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  right: -100px;
+  animation-delay: 3s;
+}
+
+.decoration-3 {
+  width: 150px;
+  height: 150px;
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 6s;
+}
+
+/*=========================
+  9. Animations
+=========================*/
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-25px) rotate(180deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*=========================
+  10. Responsive Design
+=========================*/
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 1.5rem;
+  }
+
+  .hero-headline {
+    margin-bottom: 1rem;
+  }
+
+  .hero-subheading {
+    margin-bottom: 2rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-cta {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .decoration-1 {
+    width: 200px;
+    height: 200px;
+    left: -100px;
+  }
+
+  .decoration-2 {
+    width: 150px;
+    height: 150px;
+    right: -75px;
+  }
+
+  .decoration-3 {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content {
+    padding: 1rem;
+    width: 95%;
+  }
+
+  .hero-subheading {
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-cta {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .decoration {
+    display: none;
+  }
+}
+
+/*=========================
+  11. Accessibility
+=========================*/
+@media (prefers-contrast: high) {
+  .hero-overlay {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  .hero-cta {
+    border-width: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decoration {
+    animation: none;
+  }
+
+  .hero-section {
+    transition: none;
+  }
+
+  .hero-text {
+    animation: none;
+  }
+}

@@ -1,0 +1,268 @@
+.table-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-light)
+  );
+  border-radius: var(--border-radius12);
+  color: white;
+  box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+.table-title {
+  font-size: 18px;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.table-subtitle {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.table-wrapper {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius12);
+  overflow-x: auto;
+  box-shadow: 0 8px 25px var(--shadow-light);
+  border: 1px solid var(--border-color);
+}
+
+.table-wrapper .creator {
+  padding: 10px;
+}
+
+.quran-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.quran-table thead {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-light)
+  );
+  color: white;
+}
+
+.quran-table th {
+  padding: 6px 4px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 11px;
+  border-bottom: 2px solid var(--primary-dark);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.quran-table td {
+  padding: 6px 4px;
+  text-align: center;
+  border-bottom: 1px solid var(--table-border);
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.quran-table tbody tr:nth-child(even) {
+  background-color: var(--background-light);
+}
+
+.quran-table tbody tr:hover {
+  background-color: var(--table-hover);
+  transition: var(--transition);
+}
+
+.completed-row {
+  background-color: var(--completed-bg) !important;
+  border-right: 4px solid var(--completed-border);
+}
+
+.completed-row:hover {
+  background-color: rgba(66, 165, 245, 0.15) !important;
+}
+
+.reader-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: center;
+  direction: rtl;
+  transition: var(--transition);
+  background-color: white;
+}
+
+.reader-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.1);
+}
+
+.reader-input::placeholder {
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.juz-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--primary-color);
+  background-color: var(--decoration-color);
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  line-height: 16px;
+  margin: 0 auto;
+}
+
+.verse-text {
+  font-weight: bold;
+  color: var(--text-primary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.status-badge {
+  background-color: var(--color-available);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+.status-badge.green {
+  background-color: var(--color-available);
+}
+.status-badge.red {
+  background-color: var(--color-reserved);
+}
+.completion-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+  transform: scale(1.2);
+}
+
+.notes-textarea {
+  width: 100%;
+  min-width: 100px;
+  padding: 6px 8px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 12px;
+  resize: vertical;
+  direction: rtl;
+  font-family: inherit;
+  transition: var(--transition);
+  background-color: white;
+}
+
+.notes-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.1);
+}
+
+.notes-textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+/* الشاشات المتوسطة */
+@media (min-width: 481px) {
+  .quran-table {
+    min-width: 800px;
+    font-size: 12px;
+  }
+
+  .quran-table th,
+  .quran-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+
+  .table-title {
+    font-size: 22px;
+  }
+
+  .reader-input,
+  .notes-textarea {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .juz-number {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+
+  .verse-text {
+    font-size: 11px;
+  }
+}
+
+/* الشاشات الكبيرة */
+@media (min-width: 769px) {
+  .table-title {
+    font-size: 28px;
+  }
+
+  .table-subtitle {
+    font-size: 16px;
+  }
+
+  .quran-table {
+    font-size: 14px;
+  }
+
+  .quran-table th,
+  .quran-table td {
+    padding: 15px 12px;
+  }
+
+  .reader-input,
+  .notes-textarea {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .juz-number {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  td.verse-text {
+    font-size: 16px;
+  }
+}
+
+/* تحسينات الطباعة */
+@media print {
+  .table-header {
+    background: var(--primary-color) !important;
+    color: white !important;
+  }
+
+  .quran-table thead {
+    background: var(--primary-color) !important;
+    color: white !important;
+  }
+
+  .completed-row {
+    background-color: #f0f0f0 !important;
+  }
+}
