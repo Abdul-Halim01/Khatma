@@ -1,0 +1,275 @@
+/* الأساس لشاشات الموبايل */
+.about-section {
+  padding: 40px 0;
+  background: linear-gradient(
+    135deg,
+    var(--background-light) 0%,
+    var(--card-background) 100%
+  );
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.about-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+  text-align: center;
+  min-height: auto;
+}
+
+.about-text {
+  padding: 20px 0;
+}
+
+.about-headline {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 24px;
+  line-height: 1.2;
+  position: relative;
+}
+
+.about-headline::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--secondary-color),
+    var(--primary-color)
+  );
+  border-radius: 2px;
+}
+
+.about-description {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 400;
+}
+
+.about-steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* العنصر الدائري */
+.circle-container {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin: 40px auto;
+  border: 3px solid #4a90e2;
+  border-radius: 50%;
+  background-color: #f5faff;
+}
+
+/* العناصر داخل الدائرة */
+.steps-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  width: 100px;
+  text-align: center;
+  padding: 12px;
+  background: var(--card-background);
+  border-radius: var(--border-radius12);
+  box-shadow: 0 4px 12px var(--shadow-light);
+  border: 1px solid rgba(45, 90, 61, 0.1);
+  transform: translate(-50%, -50%);
+}
+
+.steps-item span {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.steps-item:hover {
+  transform: translate(-50%, -50%) translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
+}
+
+.steps-icon {
+  background-image: linear-gradient(
+    135deg,
+    var(--primary-light),
+    var(--primary-color)
+  );
+  color: white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  gap: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.steps-item:hover .steps-icon {
+  background-color: #357abd;
+}
+
+/* أماكن العناصر في الدائرة - 4 عناصر كمثال */
+.circle-container .steps-item:nth-child(1) {
+  top: 0%;
+  left: 50%;
+}
+.circle-container .steps-item:nth-child(2) {
+  top: 50%;
+  left: 95%;
+}
+.circle-container .steps-item:nth-child(3) {
+  top: 100%;
+  left: 50%;
+}
+.circle-container .steps-item:nth-child(4) {
+  top: 50%;
+  left: 5%;
+}
+
+/* الصورة */
+.about-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.quran-image {
+  max-width: 90%;
+  height: auto;
+  border-radius: var(--border-radius12);
+  box-shadow: 0 8px 20px var(--shadow-medium);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.quran-image:hover {
+  transform: scale(1.05);
+}
+
+/* --------------------- */
+/* الشاشات المتوسطة */
+@media (min-width: 481px) {
+  .about-headline {
+    font-size: 2rem;
+  }
+
+  .about-description {
+    font-size: 1rem;
+  }
+
+  .steps-item span {
+    font-size: 0.95rem;
+  }
+
+  .quran-image {
+    max-width: 80%;
+  }
+}
+
+/* الشاشات الكبيرة */
+@media (min-width: 769px) {
+  .about-section {
+    padding: 60px 0px;
+  }
+
+  .about-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    text-align: left;
+    min-height: 500px;
+  }
+
+  .about-headline {
+    font-size: 2.5rem;
+  }
+
+  .about-headline::after {
+    left: 0;
+    transform: none;
+  }
+
+  .about-description {
+    text-align: justify;
+    font-size: 1.1rem;
+  }
+
+  .about-steps {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* العنصر الدائري */
+  .circle-container {
+    width: 350px;
+    height: 350px;
+  }
+  .steps-item {
+    padding: 16px;
+  }
+
+  .quran-image {
+    max-width: 80%;
+  }
+}
+
+@media (min-width: 997px) {
+  .about-headline {
+    text-align: right;
+  }
+
+  .about-headline::after {
+    left: 25%;
+  }
+}
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .steps-item {
+    transition: none;
+  }
+
+  .steps-item:hover {
+    transform: none;
+  }
+
+  .quran-image {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .about-section {
+    background: var(--card-background);
+  }
+
+  .steps-item {
+    border: 2px solid var(--primary-color);
+  }
+}
