@@ -68,28 +68,7 @@ const Features = () => {
 
           <div className="features-grid" role="list">
             {features.map((feature, index) => (
-              <article
-                key={index}
-                className="feature-card"
-                role="listitem"
-                tabIndex={0}
-                aria-labelledby={`feature-title-${index}`}
-                aria-describedby={`feature-desc-${index}`}
-              >
-                <span
-                  className="feature-icon"
-                  role="img"
-                  aria-label={`${feature.title} أيقونة`}
-                >
-                  {feature.icon}
-                </span>
-                <h3 id={`feature-title-${index}`} className="feature-title">
-                  {feature.title}
-                </h3>
-                <p id={`feature-desc-${index}`} className="feature-description">
-                  {feature.description}
-                </p>
-              </article>
+              <FeatureCard key={index} feature={feature} />
             ))}
           </div>
         </div>
@@ -97,5 +76,15 @@ const Features = () => {
     </Element>
   );
 };
+
+function FeatureCard({feature}) {
+  return (
+    <div className="feature-card">
+      <span className="feature-icon">{feature.icon}</span>
+      <h3 className="feature-title">{feature.title}</h3>
+      <p className="feature-description">{feature.description}</p>
+    </div>
+  )
+}
 
 export default Features;

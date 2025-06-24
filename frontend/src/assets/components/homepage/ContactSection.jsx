@@ -83,7 +83,18 @@ const ContactUs = () => {
           </div>
 
           <div className="contact-form-wrapper">
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <ContactForm formData={formData} errors={errors} handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
+          </div>
+        </div>
+      </section>
+    </Element>
+  );
+};
+
+//فورم التواصل
+function ContactForm({formData, errors, handleInputChange, handleSubmit}) {
+  return (
+    <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="fullName">الاسم الكامل *</label>
                 <input
@@ -152,12 +163,8 @@ const ContactUs = () => {
                 إرسال الرسالة
               </button>
             </form>
-          </div>
-        </div>
-      </section>
-    </Element>
-  );
-};
+  )
+}
 
 //فانشكن بتتشك علي الايميل صح ولا غلط
 const validateEmail = (email) => {

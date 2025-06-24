@@ -36,6 +36,7 @@ const Stats = () => {
   if (loading) return <div>Loading stats...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
+
   return (
     <div className="stats-container">
       <div className="stats-grid">

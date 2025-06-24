@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa";
 import api from "../../../api";
 import axios from "axios";
+import SuccessMessage from "../reusable/SuccessMessage";
+
+const api_url = import.meta.env.VITE_API_URL;
 
 const api_url = import.meta.env.VITE_API_URL;
 
@@ -36,7 +39,7 @@ const SignUp = ({ route = "/api/user/register/", method = "register" }) => {
   };
 
   //فانكشن الارسال و الربط ب الباك اند
-  const handleSubmit = async (e) => {
+  /**const handleSubmit = async (e) => {
     e.preventDefault();
 
     const isValid = validateForm(formData , setErrors);
@@ -67,7 +70,43 @@ const SignUp = ({ route = "/api/user/register/", method = "register" }) => {
     } finally {
       setIsLoading(false);
     }
+  };**/
+
+
+  /*** */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const isValid = validateForm(formData , setErrors);
+    if (!isValid) return;
+
+    setIsLoading(true);
+    try {
+      //ده غلط المفروض يستقبل الداتا كلها
+      const response = await axios.post(`${api_url}/api/signup/`, {
+        fullname: formData.name,
+        email: formData.email,
+        password: formData.password,
+        gender: formData.gender,
+        phone: formData.phone,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      console.log('Signup successful:', response.data);    
+      setTimeout(() => navigate("/login"), 1500);
+     
+    } catch (error) {
+      console.log("خطأ من السيرفر:", error.response?.data);
+      alert(
+        "فشل تسجيل الحساب: " +
+          (error.response?.data?.message || "تحقق من البيانات المدخلة")
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
+  /*** */
+
 
   return (
     <div className="login">
@@ -78,90 +117,132 @@ const SignUp = ({ route = "/api/user/register/", method = "register" }) => {
               <FaChevronLeft />
             </Link>
             <h1 className="login-title">إنشاء حساب</h1>
-            <form className="login-form" onSubmit={handleSubmit}>
-              {["name", "email", "password", "gender", "phone"].map((field) => (
-                <div className="form-group" key={field}>
-                  <label>
-                    {field === "name"
-                      ? "الاسم الكامل"
-                      : field === "email"
-                      ? "البريد الإلكتروني"
-                      : field === "password"
-                      ? "كلمة المرور"
-                      : field === "gender"
-                      ? "الجنس"
-                      : "رقم الهاتف"}
-                  </label>
-                  {field === "gender" ? (
-                    <select
-                      name={field}
-                      className={`form-input ${errors[field] ? "error" : ""}`}
-                      value={formData[field]}
-                      onChange={handleInputChange}
-                      disabled={isLoading}
-                    >
-                      <option value="">اختر الجنس</option>
-                      <option value="male">ذكر</option>
-                      <option value="female">أنثى</option>
-                    </select>
-                  ) : (
-                    <input
-                      type={
-                        field === "password"
-                          ? "password"
-                          : field === "email"
-                          ? "email"
-                          : "text"
-                      }
-                      name={field}
-                      className={`form-input ${errors[field] ? "error" : ""}`}
-                      value={formData[field]}
-                      onChange={handleInputChange}
-                      disabled={isLoading}
-                      placeholder={`أدخل ${
-                        field === "name"
-                          ? "اسمك"
-                          : field === "email"
-                          ? "بريدك"
-                          : field === "password"
-                          ? "كلمة المرور"
-                          : field === "phone"
-                          ? "رقم هاتفك"
-                          : ""
-                      }`}
-                    />
-                  )}
-                  {errors[field] && (
-                    <div className="error-message">
-                      <MdWarning
-                        style={{ color: "#ff9800", marginLeft: "4px" }}
-                      />
-                      {errors[field]}
-                    </div>
-                  )}
-                </div>
-              ))}
-              <button
-                type="submit"
-                className="login-button"
-                disabled={isLoading}
-              >
-                {isLoading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
-              </button>
-            </form>
-
+            <SignUpForm formData={formData} errors={errors} handleInputChange={handleInputChange} handleSubmit={handleSubmit} isLoading={isLoading} />
             {successMessage && (
-              <div className="success-message">
-                <MdCheckCircle style={{ color: "green", marginLeft: "4px" }} />
-                {successMessage}
-              </div>
-            )}
+              <SuccessMessage successMessage={"تم إنشاء الحساب بنجاح!."} />
+            )}    
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+//فورم التسجيل
+
+function SignUpForm({ formData, errors, handleInputChange, handleSubmit, isLoading }) {
+  return (
+    <form className="login-form" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="name">الاسم الكامل</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+          className={`form-input ${errors.name ? "error" : ""}`}
+          placeholder="أدخل اسمك"
+          disabled={isLoading}
+        />
+        {errors.name && (
+          <div className="error-message">
+            <MdWarning style={{ color: "#ff9800", marginInlineEnd: 4 }} />
+            {errors.name}
+          </div>
+        )}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="email">البريد الإلكتروني</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          className={`form-input ${errors.email ? "error" : ""}`}
+          placeholder="أدخل بريدك"
+          disabled={isLoading}
+        />
+        {errors.email && (
+          <div className="error-message">
+            <MdWarning style={{ color: "#ff9800", marginInlineEnd: 4 }} />
+            {errors.email}
+          </div>
+        )}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="password">كلمة المرور</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          className={`form-input ${errors.password ? "error" : ""}`}
+          placeholder="أدخل كلمة المرور"
+          disabled={isLoading}
+        />
+        {errors.password && (
+          <div className="error-message">
+            <MdWarning style={{ color: "#ff9800", marginInlineEnd: 4 }} />
+            {errors.password}
+          </div>
+        )}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="gender">الجنس</label>
+        <select
+          id="gender"
+          name="gender"
+          value={formData.gender}
+          onChange={handleInputChange}
+          className={`form-input ${errors.gender ? "error" : ""}`}
+          disabled={isLoading}
+        >
+          <option value="">اختر الجنس</option>
+          <option value="male">ذكر</option>
+          <option value="female">أنثى</option>
+        </select>
+        {errors.gender && (
+          <div className="error-message">
+            <MdWarning style={{ color: "#ff9800", marginInlineEnd: 4 }} />
+            {errors.gender}
+          </div>
+        )}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="phone">رقم الهاتف</label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          value={formData.phone}
+          onChange={handleInputChange}
+          className={`form-input ${errors.phone ? "error" : ""}`}
+          placeholder="أدخل رقم هاتفك"
+          disabled={isLoading}
+        />
+        {errors.phone && (
+          <div className="error-message">
+            <MdWarning style={{ color: "#ff9800", marginInlineEnd: 4 }} />
+            {errors.phone}
+          </div>
+        )}
+      </div>
+
+      <button type="submit" className="login-button" disabled={isLoading}>
+        {isLoading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
+      </button>
+    </form>
+  );
+}
+
+
 
 //vaildation function
 const validateField = (name, value) => {

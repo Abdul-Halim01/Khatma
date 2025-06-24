@@ -7,33 +7,29 @@ Html {
   --primary-light: #4a7c59;
   --primary-dark: #1e3d2a;
   --secondary-color: #f9a825;
-
   --text-primary: #2c3e50;
   --text-secondary: #6b7280;
-
   --background-light: #f9fafb;
   --card-background: #ffffff;
   --overlay-color: rgba(0, 0, 0, 0.4);
-
   --color-available: #66bb6a;
   --color-reserved: #e53935;
   --color-completed: #42a5f5;
-
   --accent-color: #ffd700;
   --decoration-color: rgb(249 210 6 / 8%);
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.15);
   --border-color: #e0e0e0;
-
   --border-radius30: 30px;
   --border-radius12: 12px;
   --transition: all 0.3s ease;
-
   --table-border: #ddd;
   --table-hover: #ebebebf7;
   --completed-bg: rgba(66, 165, 245, 0.1);
   --completed-border: var(--color-completed);
 }
+
+
 * {
   margin: 0;
   padding: 0;

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "./styles/KhatmahTable.css";
-
+import SuccessMessage from "../reusable/SuccessMessage";
+import { ProgressBar } from "../reusable/MainKhatmaCard";
+import { Link } from "react-router-dom";
+import { FaChevronLeft } from "react-icons/fa";
 const KhatmahTable = () => {
   const [juzData, setJuzData] = useState([
     {
@@ -303,26 +306,23 @@ const KhatmahTable = () => {
       isCompleted: false,
       notes: "",
     },
-  ]);
+  ]); 
 
   const handleReaderNameChange = (id, value) => {
     setJuzData((prev) =>
-      prev.map((juz) => (juz.id === id ? { ...juz, readerName: value } : juz))
-    );
-    setJuzData((prev) =>
-      prev.map((juz) =>
-        juz.id === id && juz.readerName !== ""
-          ? { ...juz, status: "محجوز" }
-          : { ...juz, status: "متاح" }
-      )
-    );
-  };
-
-  const handleNotesChange = (id, value) => {
-    setJuzData((prev) =>
-      prev.map((juz) => (juz.id === id ? { ...juz, notes: value } : juz))
+      prev.map((juz) => {
+        const isCurrent = juz.id === id;
+        const newReaderName = isCurrent ? value : juz.readerName;
+  
+        return {
+          ...juz,
+          readerName: isCurrent ? value : juz.readerName,
+          status: newReaderName.trim() !== "" ? "محجوز" : "متاح",
+        };
+      })
     );
   };
+  
 
   const handleCompletionChange = (id, checked) => {
     setJuzData((prev) =>
@@ -335,12 +335,18 @@ const KhatmahTable = () => {
   return (
     <div className="quran-table-container">
       <div className="table-header">
-        <h1 className="table-title">جدول متابعة تلاوة القرآن الكريم</h1>
+       <div className="table-header-content">
+       <h1 className="table-title">جدول متابعة تلاوة القرآن الكريم</h1>
         <p className="table-subtitle">
           تتبع تقدمك في تلاوة الأجزاء الثلاثين من القرآن الكريم
         </p>
+       </div>
+        <Link className="back" to="/UserDashboard">
+              <FaChevronLeft />
+            </Link>
       </div>
-
+      <ProgressBar progress={80}/>
+      <Intentions  />
       <div className="table-wrapper">
         <h1 className="creator">مسؤل الختمه : شهاب احمد</h1>
         <table className="quran-table">
@@ -352,7 +358,6 @@ const KhatmahTable = () => {
               <th>إلى سورة</th>
               <th>الحالة</th>
               <th>تم الإنجاز؟</th>
-              <th>ملاحظات</th>
             </tr>
           </thead>
           <tbody>
@@ -396,15 +401,6 @@ const KhatmahTable = () => {
                     className="completion-checkbox"
                   />
                 </td>
-                <td>
-                  <textarea
-                    value={juz.notes}
-                    onChange={(e) => handleNotesChange(juz.id, e.target.value)}
-                    placeholder="ملاحظات..."
-                    className="notes-textarea"
-                    rows={2}
-                  />
-                </td>
               </tr>
             ))}
           </tbody>
@@ -413,5 +409,43 @@ const KhatmahTable = () => {
     </div>
   );
 };
+
+
+function Intentions() {
+  //هتتخزن في الداتا بيز وتيجي منها 
+  const [intention, setIntention] = useState('1-...... \n2-...... \n3-...... ');
+  const [successMessage, setSuccessMessage] = useState('');
+  //هبعت النوايا للباك اند
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (intention.trim()) {
+      setIntention('');
+      setSuccessMessage('تم حفظ النية بنجاح');
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 1000);
+    }
+  };
+
+  return (
+    <div className="intentions">
+      <h3 className="intentions-title"> لكل ختمه نية, يا تري اي نواياك في الختمه دي؟! </h3>
+      <form onSubmit={handleSubmit} className="intentions-form">
+        <textarea
+          className="intentions-textarea"
+          value={intention}
+          onChange={(e) => setIntention(e.target.value)}
+          placeholder="اكتب نيتك في هذه الختمة  "
+         rows="4"
+          required
+        />
+        <button type="submit" className="intentions-submit">
+          حفظ النية
+        </button>
+      </form>
+      {successMessage && <SuccessMessage successMessage={successMessage} />}
+        </div>
+  );
+}
 
 export default KhatmahTable;

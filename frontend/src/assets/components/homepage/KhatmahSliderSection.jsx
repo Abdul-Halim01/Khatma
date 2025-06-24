@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import {
   FaChevronRight,
   FaChevronLeft,
-  FaUsers,
   FaMosque,
 } from "react-icons/fa";
 
 import "./styles/SliderSection.css";
 import { Element } from "react-scroll";
-import { Link } from "react-router-dom";
+import {MainKhatmaCard} from "../reusable/MainKhatmaCard";
 
 const KhatmahSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -100,7 +99,7 @@ const KhatmahSlider = () => {
           >
             {khatmahSessions.map((khatmah) => (
               <div key={khatmah.id} className="slide">
-                <KhatmaCard khatmah={khatmah} />
+                <MainKhatmaCard  khatmah={khatmah} />
               </div>
             ))}
           </div>
@@ -114,100 +113,12 @@ const KhatmahSlider = () => {
           </button>
         </div>
 
-        {/* إذا أردت تفعيل النقاط السفلية:
-      <div className="slider-dots">
-        {khatmahSessions.map((_, index) => (
-          <button
-            key={index}
-            className={`dot ${index === currentSlide ? "active" : ""}`}
-            onClick={() => goToSlide(index)}
-            aria-label={`انتقل إلى الشريحة ${index + 1}`}
-          />
-        ))}
-      </div>
-      */}
+       
       </section>
     </Element>
   );
 };
 
-//مكون للكرت بتاع الخاتمه نفسه اللي المفروض البانات بتاعته جاي من الباك اند
-function KhatmaCard({ khatmah }) {
-  return (
-    <div className="khatmah-card">
-      <div className="card-header">
-        <h3 className="khatmah-title">{khatmah.title}</h3>
-        <span
-          className="status-badge"
-          style={{
-            backgroundColor: getStatusColor(khatmah.status),
-          }}
-        >
-          {getStatusText(khatmah.status)}
-        </span>
-      </div>
 
-      <p className="khatmah-description">{khatmah.description}</p>
 
-      <div className="participants-info">
-        <span className="participants-count">
-          <FaUsers /> {khatmah.participants} مشارك
-        </span>
-      </div>
-
-      <div className="progress-section">
-        <div className="progress-info">
-          <span className="progress-label">التقدم</span>
-          <span className="progress-percentage">{khatmah.progress}%</span>
-        </div>
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{ width: `${khatmah.progress}%` }}
-          ></div>
-        </div>
-      </div>
-
-      <Link
-        to="/registration"
-        className={`join-button ${khatmah.status}`}
-        disabled={khatmah.status === "completed"}
-      >
-        {khatmah.status === "completed"
-          ? "مكتملة"
-          : khatmah.status === "reserved"
-          ? "انضم إلى قائمة الانتظار"
-          : "انضم الآن"}
-      </Link>
-    </div>
-  );
-}
-
-//فانكشن عشان تغير لون الاسبان حسب حالة الخاتمه
-const getStatusColor = (status) => {
-  switch (status) {
-    case "available":
-      return "var(--color-available)";
-    case "reserved":
-      return "var(--color-reserved)";
-    case "completed":
-      return "var(--color-completed)";
-    default:
-      return "var(--color-available)";
-  }
-};
-
-//فانكشن عشان محتوي الاسبان حسب حالة الخاتمه ودي هتختصر عشان مفيش كل ده اصلا    xxxxxxxxxxxxxxxxxx هتتعدل  xxxxxxxxxxxxxxxx
-const getStatusText = (status) => {
-  switch (status) {
-    case "available":
-      return "متاحة للانضمام";
-    case "reserved":
-      return "محجوزة";
-    case "completed":
-      return "مكتملة";
-    default:
-      return "متاحة";
-  }
-};
 export default KhatmahSlider;

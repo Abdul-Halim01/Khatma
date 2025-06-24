@@ -9,10 +9,6 @@
   z-index: 1000;
 }
 
-.header.dark {
-  background-color: rgba(31, 41, 55, 0.7); /* optional for dark mode */
-}
-
 .header-container {
   max-width: 1280px;
   margin: 0 auto;

@@ -27,7 +27,7 @@ const CreateKhatma = ({ darkMode = false }) => {
   };
 
   return (
-    <div className="create-khatma-container">
+    <section className="create-khatma-container">
       <div className="header-section">
         <div className="icon-container">
           <FaPlus className="plus-icon" />
@@ -102,7 +102,8 @@ const CreateKhatma = ({ darkMode = false }) => {
             <option value="group">عامة</option>
           </select>
           <div className="form-footer">
-            <select
+            <input type="number" name="duration" value={khatmaDetails.duration} min={1} onChange={handleInputChange} placeholder="مدة الختمة بالأيام" className={`form-input`} />
+           {/* <select
               name="duration"
               value={khatmaDetails.duration}
               onChange={handleInputChange}
@@ -113,14 +114,14 @@ const CreateKhatma = ({ darkMode = false }) => {
               <option value="14">14 يوم</option>
               <option value="30">30 يوم</option>
               <option value="custom">مخصص</option>
-            </select>
+            </select>*/}
             <button type="submit" className="submit-button">
               إنشاء الختمة
             </button>
           </div>
         </div>
       </form>
-    </div>
+    </section>
   );
 };
 

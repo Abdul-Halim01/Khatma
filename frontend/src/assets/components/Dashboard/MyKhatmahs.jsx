@@ -34,35 +34,33 @@ const MyKhatmahs = () => {
         <h2 className="myKh_title">ختماتي الحالية</h2>
       </div>
       <div className="myKh_grid">
-        {khatmas.map((khatma) => (
-          <KhatmaCard key={khatma.id} khatma={khatma} />
-        ))}
+
+        {khatmas.map((khatma) => {
+          return <CurrentKhatmaCard key={khatma.id} khatma={khatma} />  
+        }
+        )}
       </div>
     </div>
   );
 };
 
-function KhatmaCard({ khatma }) {
-  return (
-    <Link to={`/KhatmahPage/${khatma.id}`} className={`myKh_card`}>
-      <div className="myKh_card-header">
-        <div className="myKh_type">
-          <div
-            className={`myKh_type-icon ${khatma.is_public ? "public" : "private"}`}
-          >
-            {khatma.is_public ? (
-              <Users className="myKh_icon-small" />
-            ) : (
-              <Crown className="myKh_icon-small" />
-            )}
-          </div>
-          <div>
-            <h3 className="myKh_name">{khatma.name}</h3>
-            <p className="myKh_progress-note">
-              مشاركتك: {Math.floor(Math.random() * 5) + 1} أجزاء
-            </p>
-          </div>
-        </div>
+/* 
+ *  كارد الختمات
+ */
+function  CurrentKhatmaCard({khatma}) {
+  return    <Link to={`/KhatmahPage`} className={`myKh_card`}>
+  <div className="myKh_card-header">
+    <div className="myKh_type">
+      <div
+        className={`myKh_type-icon ${
+          khatma.type === "private" ? "private" : "public"
+        }`}
+      >
+        {khatma.type === "private" ? (
+          <Crown className="myKh_icon-small" />
+        ) : (
+          <Users className="myKh_icon-small" />
+        )}
       </div>
       <div className="myKh_progress-wrapper">
         <div className="myKh_progress-bar-bg">

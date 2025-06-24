@@ -1,0 +1,51 @@
+
+.success-message {
+  background: linear-gradient(135deg, var(--color-available), #81c784);
+  color: white;
+  padding: 15px 20px;
+  border-radius: var(--border-radius12);
+  text-align: center;
+  font-weight: 600;
+  margin-top: 20px;
+  animation: slideIn 0.2s ease-out;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/*
+.success-message {
+    text-align: center;
+    background: var(--card-background);
+    border-radius: var(--border-radius30);
+    padding: 40px 20px;
+    box-shadow: 0 20px 60px var(--shadow-light);
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .success-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--color-available);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 2rem;        
+    color: white;
+    font-weight: bold;
+  }
+  
+  .success-message h2 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  .success-message p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+  }*/

@@ -3,6 +3,8 @@ import Sidebar from "../assets/components/Dashboard/Sidebar";
 import Header from "../assets/components/Dashboard/Header";
 import Overview from "../assets/components/Dashboard/Overview";
 import CreateKhatma from "../assets/components/Dashboard/createKhatma";
+import AllKhatmahs from "../assets/components/Dashboard/AllKhatmahs";
+import FinishedKhatmah from "../assets/components/Dashboard/FinishedKhatmah";
 
 import "./styles/UserDashboard.css";
 function UserDashboard() {
@@ -18,12 +20,14 @@ function UserDashboard() {
             activeSection={activeSection}
             setActiveSection={setActiveSection}
             menuOpen={menuOpen}
+            setMenuOpen={setMenuOpen}
           />
          {activeSection === "overview" && <Overview />}
          {activeSection === "newKhatma" && <CreateKhatma />}
-         
-         {/* {activeSection === "joinKhatma" && <JoinKhatma />}
-         {activeSection === "myKhatmas" && <MyKhatmahs />}*/}
+         {activeSection === "joinKhatma" && <AllKhatmahs />}
+         {activeSection === "finishedKhatmahs" && <FinishedKhatmah />}
+
+         {/* {activeSection === "myKhatmas" && <MyKhatmahs />}*/}
         </div>
       </div>
     </section>
