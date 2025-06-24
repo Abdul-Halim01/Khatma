@@ -6,15 +6,12 @@ import { Link } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa";
 import axios from "axios";
 import api from "../../../api"
+import SuccessMessage from "../reusable/SuccessMessage";
+
+const api_url = import.meta.env.VITE_API_URL;
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/****
- *
- *  formData <= انا هبعتله بيانات الشخص
- *
- *
- *  */
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -37,6 +34,7 @@ const Login = () => {
     return !emailErr && !passErr;
   };
 
+ 
   //فانكشن الارسال و الربط ب الباك اند
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,29 +44,32 @@ const Login = () => {
     setIsLoading(true);
   
     try {
-      const response =  await api.post("/api/token/", {
+      // when use api if post use await api.post("route", Dict)
+      // Dict is what send to backend
+      const response =  await axios.post(`${api_url}/api/login/`, {
         username: formData.email.trim(),
         password: formData.password.trim(),
+      }, {
+        headers: { 'Content-Type': 'application/json' },
       });
-  
+
+      //Need to save them because will use in operation Authentication after
+      localStorage.setItem('accessToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+
       // نفترض أن الرد يحتوي على رسالة أو توكن أو بيانات المستخدم
       const { message } = response.data;
   
-
-
+      // when 
+      console.log(response);
       setSuccessMessage(message || "تم تسجيل الدخول بنجاح! مرحباً بك في منصة تلاوة القرآن الكريم");
-
-       localStorage.setItem(ACCESS_TOKEN, res.data.access);
-       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-
+    
       setFormData({ email: "", password: "" });
   
       setTimeout(() => setSuccessMessage(""), 3000);
   
       // يمكنك توجيه المستخدم إلى صفحة أخرى أو حفظ التوكن هنا
-      // navigate('/dashboard');
-      // localStorage.setItem('token', response.data.token);
-  
+      navigate("/UserDashboard");
     } catch (error) {
       const serverMessage = error?.response?.data?.message || "فشل في تسجيل الدخول. يرجى المحاولة مرة أخرى";
   console.log(error)
@@ -80,6 +81,8 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+
+
 
   const handleGoogleLogin = () => {
     setIsLoading(true);
@@ -101,57 +104,7 @@ const Login = () => {
             <h1 className="login-title">تسجيل الدخول</h1>
             <p className="login-subtitle">منصة تلاوة القرآن الكريم الجماعية</p>
 
-            <form className="login-form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="email">البريد الإلكتروني</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`form-input ${errors.email ? "error" : ""}`}
-                  placeholder="أدخل بريدك الإلكتروني"
-                  disabled={isLoading}
-                />
-
-                {/* لو في مشكله في الايميل هو بيعرف من "فانكشن تحقق الحقل" الخطا هيتسجل في الايرور.ايميل فيكون فيه داتا فيعرضه */}
-                {errors.email && (
-                  <div className="error-message">
-                    <MdErrorOutline size={18} style={{ marginInlineEnd: 5 }} />
-                    {errors.email}
-                  </div>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">كلمة المرور</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`form-input ${errors.password ? "error" : ""}`}
-                  placeholder="أدخل كلمة المرور"
-                  disabled={isLoading}
-                />
-                {errors.password && (
-                  <div className="error-message">
-                    <MdErrorOutline size={18} style={{ marginInlineEnd: 5 }} />
-                    {errors.password}
-                  </div>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="login-button"
-                disabled={isLoading}
-              >
-                {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
-              </button>
-            </form>
+          <LoginForm formData={formData} errors={errors} handleChange={handleChange} handleSubmit={handleSubmit} /> 
 
             <div className="divider">
               <div className="divider-line"></div>
@@ -179,18 +132,73 @@ const Login = () => {
               </p>
             </div>
 
-            {successMessage && (
-              <div className="success-message">
-                <MdCheckCircle size={18} style={{ marginInlineEnd: 5 }} />
-                {successMessage}
-              </div>
-            )}
+          {/*  {successMessage && (
+              <SuccessMessage successMessage={successMessage} />
+            )}*/}
           </div>
         </div>
       </div>
     </section>
   );
 };
+
+//فورم التسجيل
+
+function LoginForm({formData, errors, handleChange, handleSubmit, isLoading}) {
+  return (
+    <form className="login-form" onSubmit={handleSubmit}>
+    <div className="form-group">
+      <label htmlFor="email">البريد الإلكتروني</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        className={`form-input ${errors.email ? "error" : ""}`}
+        placeholder="أدخل بريدك الإلكتروني"
+        disabled={isLoading}
+      />
+
+      {/* لو في مشكله في الايميل هو بيعرف من "فانكشن تحقق الحقل" الخطا هيتسجل في الايرور.ايميل فيكون فيه داتا فيعرضه */}
+      {errors.email && (
+        <div className="error-message">
+          <MdErrorOutline size={18} style={{ marginInlineEnd: 5 }} />
+          {errors.email}
+        </div>
+      )}
+    </div>
+
+    <div className="form-group">
+      <label htmlFor="password">كلمة المرور</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        className={`form-input ${errors.password ? "error" : ""}`}
+        placeholder="أدخل كلمة المرور"
+        disabled={isLoading}
+      />
+      {errors.password && (
+        <div className="error-message">
+          <MdErrorOutline size={18} style={{ marginInlineEnd: 5 }} />
+          {errors.password}
+        </div>
+      )}
+    </div>
+
+    <button
+      type="submit"
+      className="login-button"
+      disabled={isLoading}
+    >
+      {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
+    </button>
+  </form>
+  )
+}
 
 //validation function for fields as the same time
 const validateField = (name, value) => {
@@ -206,3 +214,8 @@ const validateField = (name, value) => {
 };
 
 export default Login;
+
+
+
+
+

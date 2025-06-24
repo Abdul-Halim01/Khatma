@@ -14,15 +14,6 @@ const HeroSection = () => {
     setIsLoaded(true);
   }, []);
 
-  const handleStartKhatmah = () => {
-    console.log("Start a Khatmah button clicked!");
-    // Add your navigation logic here
-  };
-
-  const handleJoinNow = () => {
-    console.log("Join Now button clicked!");
-    // Add your navigation logic here
-  };
 
   return (
     <Element name="Hero">
@@ -39,7 +30,6 @@ const HeroSection = () => {
             <div className="hero-buttons">
               <Link
                 className="hero-cta primary"
-                onClick={handleStartKhatmah}
                 to="/registration"
               >
                 انشاء ختمة <span className="cta-arrow">←</span>

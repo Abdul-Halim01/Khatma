@@ -6,9 +6,11 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
+  FaHome,
 } from "react-icons/fa";
 import "./styles/Sidebar.css";
 import userImage from "../../imgs/Quran.jpg";
+import { Link } from "react-router-dom";
 
 const navItems = [
   {
@@ -30,14 +32,14 @@ const navItems = [
     color: "#2196f3",
   },
   {
-    id: "myKhatmas",
+    id: "finishedKhatmahs",
     label: "ختمات مكتمله",
     icon: FaSignOutAlt,
     color: "#fb8c00",
   },
 ];
 
-const Sidebar = ({ activeSection, setActiveSection, menuOpen }) => {
+const Sidebar = ({ activeSection, setActiveSection,setMenuOpen, menuOpen }) => {
   return (
     <>
       <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
@@ -72,6 +74,11 @@ const Sidebar = ({ activeSection, setActiveSection, menuOpen }) => {
               <span className="label">{item.label}</span>
             </button>
           ))}
+
+          <Link to="/" className="Dash-nav-button">
+            <FaHome className="icon" />
+            <span className="label">الصفحة الرئيسية</span>
+          </Link>
         </nav>
       </aside>
     </>

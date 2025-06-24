@@ -1,0 +1,223 @@
+.finished-khatmah-container {
+  padding: 1rem;
+  background-color: var(--background-light);
+}
+
+.finished-khatmah-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.finished-khatmah-header .header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  box-shadow: 0 10px 15px -3px var(--shadow-medium);
+}
+
+.icon-inner {
+  width: 2rem;
+  height: 2rem;
+  color: white;
+}
+
+.finished-khatmah-header .header-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.finished-khatmah-header .header-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.finished-khatmah-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+.finished-khatmah-card {
+  background: var(--card-background);
+  border-radius: var(--border-radius12);
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px var(--shadow-light);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.finished-khatmah-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px var(--shadow-medium);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.khatmah-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+}
+
+.type-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.type-badge.public {
+  background-color: var(--color-available);
+  color: white;
+}
+
+.type-badge.private {
+  background-color: var(--color-completed);
+  color: white;
+}
+
+.khatmah-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.khatmah-stats {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-icon {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.view-details-button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: white;
+  text-align: center;
+  border-radius: var(--border-radius12);
+  font-weight: 600;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.view-details-button:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  transform: translateY(-2px);
+}
+
+.khatmah-juzs-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.khatmah-juzs-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.khatmah-juzs-title {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem 0;
+}
+
+.khatmah-intentions-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.khatmah-intentions-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.khatmah-intentions-title {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem 0;
+}
+
+.khatmah-intentions-list  .intention-decoration {
+  display: inline-block;
+ width: 0.5rem;
+ height: 0.5rem;
+ background-color: var(--color-completed);
+ border-radius: 50%;
+ margin-left: 0.5rem;
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .finished-khatmah-container {
+    padding: 2rem;
+  }
+
+  .finished-khatmah-header .header-title {
+    font-size: 1.8rem;
+  }
+
+  .finished-khatmah-header .header-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .finished-khatmah-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}

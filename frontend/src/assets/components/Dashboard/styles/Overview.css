@@ -1,7 +1,10 @@
 /* ====================
    Welcome Section
 ==================== */
+.overview{
+  background-color: var(--background-light);
 
+}
 .overview .welcome-title {
   font-size: 1.875rem;
   font-weight: bold;
@@ -67,11 +70,6 @@
 
 .myKh_card:hover {
   transform: translateY(-5px);
-}
-
-.myKh_card.dark {
-  background-color: #1e1e1e;
-  color: #eee;
 }
 
 .myKh_card-header {
@@ -211,34 +209,6 @@
 .stats-card .label {
   font-size: 0.875rem;
   color: var(--text-secondary);
-}
-
-/* Dark Mode Variants */
-.dark .stats-card.green {
-  background: linear-gradient(
-    to bottom right,
-    rgba(6, 95, 70, 0.3),
-    rgba(4, 120, 87, 0.2)
-  );
-  border-color: rgba(4, 120, 87, 0.3);
-}
-
-.dark .stats-card.blue {
-  background: linear-gradient(
-    to bottom right,
-    rgba(30, 64, 175, 0.3),
-    rgba(37, 99, 235, 0.2)
-  );
-  border-color: rgba(30, 64, 175, 0.3);
-}
-
-.dark .stats-card.purple {
-  background: linear-gradient(
-    to bottom right,
-    rgba(88, 28, 135, 0.3),
-    rgba(109, 40, 217, 0.2)
-  );
-  border-color: rgba(88, 28, 135, 0.3);
 }
 
 /* ====================

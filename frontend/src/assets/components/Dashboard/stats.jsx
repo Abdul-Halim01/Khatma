@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { FaChartBar, FaStar, FaBookOpen, FaHeart } from "react-icons/fa";
 
 const Stats = () => {
+
+  //دول هيجوا من الباك اند
   const [userStats] = useState({
     completedKhatmas: 12,
     currentKhatmas: 3,
@@ -10,6 +12,7 @@ const Stats = () => {
     averageDaily: 2.5,
     streak: 15,
   });
+  
   return (
     <div className="stats-container">
       

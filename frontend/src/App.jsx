@@ -41,7 +41,6 @@ function App() {
 
         {/* مهمه متحذفهاش 2- دي لسه مش مفهوم المنطق بتاعها هتظهر امتي وهكذا ولكن هي خلصانه */}
          <Route path="/KhatmahPage" element={<KhatmahPage />} /> 
-
         <Route path="/logout" element={<Logout />} />
         <Route path="*" element={<Notfound />} />
 

@@ -48,7 +48,7 @@ const MyKhatmahs = () => {
 
       <div className="myKh_grid">
         {khatmas.map((khatma) => {
-          return <KhatmaCard key={khatma.id} khatma={khatma} />  
+          return <CurrentKhatmaCard key={khatma.id} khatma={khatma} />  
         }
         )}
       </div>
@@ -60,7 +60,7 @@ const MyKhatmahs = () => {
 /* 
  *  كارد الختمات
  */
-function KhatmaCard({khatma}) {
+function  CurrentKhatmaCard({khatma}) {
   return    <Link to={`/KhatmahPage`} className={`myKh_card`}>
   <div className="myKh_card-header">
     <div className="myKh_type">
@@ -97,5 +97,6 @@ function KhatmaCard({khatma}) {
   </div>
 </Link>
 }
+
 
 export default MyKhatmahs;

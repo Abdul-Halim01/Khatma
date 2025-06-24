@@ -150,8 +150,12 @@
 }
 
 .progress-label {
-  font-weight: 500;
+  font-weight: bold;
   color: var(--text-primary);
+  font-size: 1.2rem;
+}
+.progress-label svg {
+color: var(--secondary-color);
 }
 
 .progress-percentage {

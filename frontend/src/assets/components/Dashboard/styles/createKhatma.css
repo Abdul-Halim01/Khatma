@@ -1,41 +1,9 @@
-/* ===== Root Variables ===== */
-:root {
-  --primary-color: #2d5a3d;
-  --primary-light: #4a7c59;
-  --primary-dark: #1e3d2a;
-  --secondary-color: #f9a825;
-
-  --text-primary: #2c3e50;
-  --text-secondary: #6b7280;
-
-  --background-light: #f9fafb;
-  --card-background: #ffffff;
-  --overlay-color: rgba(0, 0, 0, 0.4);
-
-  --color-available: #66bb6a;
-  --color-reserved: #e53935;
-  --color-completed: #42a5f5;
-
-  --accent-color: #ffd700;
-  --decoration-color: rgb(249 210 6 / 8%);
-  --shadow-light: rgba(0, 0, 0, 0.1);
-  --shadow-medium: rgba(0, 0, 0, 0.15);
-  --border-color: #e0e0e0;
-
-  --border-radius30: 30px;
-  --border-radius12: 12px;
-  --transition: all 0.3s ease;
-
-  --table-border: #ddd;
-  --table-hover: #ebebebf7;
-  --completed-bg: rgba(66, 165, 245, 0.1);
-  --completed-border: var(--color-completed);
-}
 
 /* ===== Container & Header Section ===== */
 .create-khatma-container {
   padding: 1rem;
   background-color: var(--background-light);
+  
 }
 
 .header-section {
@@ -53,7 +21,6 @@
   border-radius: 50%;
   margin-bottom: 1rem;
   box-shadow: 0 10px 15px -3px var(--shadow-medium);
-  animation: pulse 2s infinite;
 }
 
 .plus-icon {
@@ -97,14 +64,10 @@
   background-color: var(--card-background);
 }
 
-.khatma-type-card.dark-mode {
-  border-color: #374151;
-  background-color: #1f2937;
-}
 
 .khatma-type-card:hover {
   border-color: var(--primary-color);
-  background-color: rgba(45, 90, 61, 0.05);
+  background-color: rgb(96 176 124 / 19%);
 }
 
 .card-content {
@@ -144,10 +107,6 @@
   box-shadow: 0 0 10px var(--shadow-light);
 }
 
-.details-form.dark-mode {
-  background-color: rgba(31, 41, 55, 0.5);
-}
-
 .form-title {
   font-size: 1.125rem;
   font-weight: 600;
@@ -185,16 +144,6 @@
   box-shadow: 0 0 0 2px rgba(45, 90, 61, 0.2);
 }
 
-.form-input.dark-mode {
-  background-color: #374151;
-  border-color: #4b5563;
-  color: white;
-}
-
-.form-input.dark-mode::placeholder {
-  color: var(--text-secondary);
-}
-
 .form-footer {
   display: flex;
   flex-direction: column;
@@ -223,16 +172,7 @@
 }
 
 .submit-button:hover {
-  background: linear-gradient(to right, #1e3d2a, #2d5a3d);
+  background: linear-gradient(to right, var(--primary-color), var(--primary-light));
   box-shadow: 0 15px 20px -3px var(--shadow-light);
 }
 
-/* ===== Animations ===== */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
