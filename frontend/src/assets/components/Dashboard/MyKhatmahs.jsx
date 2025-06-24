@@ -1,41 +1,29 @@
-import React, { useState } from "react";
-import {
-  FaSignOutAlt as LogOut,
-  FaCrown as Crown,
-  FaUsers as Users,
-} from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaSignOutAlt as LogOut, FaCrown as Crown, FaUsers as Users } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { fetchProtectedData } from "../../../api"; // Adjust path
 
 const MyKhatmahs = () => {
-  /***
-   *الختمات دي هتيجي من الباك اند
-   */ 
-  const [khatmas] = useState([
-    {
-      id: 1,
-      name: "ختمة العائلة الكريمة",
-      participants: 12,
-      progress: 85,
-      type: "private",
-      daysLeft: 3,
-    },
-    {
-      id: 2,
-      name: "ختمة رمضان المبارك",
-      participants: 45,
-      progress: 65,
-      type: "public",
-      daysLeft: 8,
-    },
-    {
-      id: 3,
-      name: "ختمة الأصدقاء",
-      participants: 8,
-      progress: 40,
-      type: "private",
-      daysLeft: 12,
-    },
-  ]);
+  const [khatmas, setKhatmas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadKhatmas = async () => {
+      try {
+        const data = await fetchProtectedData('api/khatmas/');
+        setKhatmas(data.results || data); // Handle pagination if present
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load khatmas. Please try again.');
+        setLoading(false);
+      }
+    };
+    loadKhatmas();
+  }, []);
+
+  if (loading) return <div>Loading khatmas...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
     <div className="myKh_container">
@@ -45,8 +33,8 @@ const MyKhatmahs = () => {
         </div>
         <h2 className="myKh_title">ختماتي الحالية</h2>
       </div>
-
       <div className="myKh_grid">
+
         {khatmas.map((khatma) => {
           return <CurrentKhatmaCard key={khatma.id} khatma={khatma} />  
         }
@@ -55,7 +43,6 @@ const MyKhatmahs = () => {
     </div>
   );
 };
-
 
 /* 
  *  كارد الختمات
@@ -75,28 +62,19 @@ function  CurrentKhatmaCard({khatma}) {
           <Users className="myKh_icon-small" />
         )}
       </div>
-      <div>
-        <h3 className="myKh_name">{khatma.name}</h3>
-        <p className="myKh_progress-note">
-          مشاركتك: {Math.floor(Math.random() * 5) + 1} أجزاء
-        </p>
+      <div className="myKh_progress-wrapper">
+        <div className="myKh_progress-bar-bg">
+          <div
+            className="myKh_progress-bar-fill"
+            style={{ width: `${khatma.completion_percentage}%` }}
+          ></div>
+        </div>
+        <span className="myKh_progress-text">
+          التقدم الإجمالي: {khatma.completion_percentage}%
+        </span>
       </div>
-    </div>
-  </div>
-
-  <div className="myKh_progress-wrapper">
-    <div className="myKh_progress-bar-bg">
-      <div
-        className="myKh_progress-bar-fill"
-        style={{ width: `${khatma.progress}%` }}
-      ></div>
-    </div>
-    <span className="myKh_progress-text">
-      التقدم الإجمالي: {khatma.progress}%
-    </span>
-  </div>
-</Link>
+    </Link>
+  );
 }
-
 
 export default MyKhatmahs;

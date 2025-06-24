@@ -10,6 +10,8 @@ import SuccessMessage from "../reusable/SuccessMessage";
 
 const api_url = import.meta.env.VITE_API_URL;
 
+const api_url = import.meta.env.VITE_API_URL;
+
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
 
@@ -46,21 +48,19 @@ const SignUp = ({ route = "/api/user/register/", method = "register" }) => {
     setIsLoading(true);
     try {
       //ده غلط المفروض يستقبل الداتا كلها
-      const { name,email, password } = formData;
-
-      //هنعدل ده + المفروض هستقبل منه رد
-      const res = await api.post(route, { username: name, email , password });
-
-      if (method === "login") {
-        localStorage.setItem("ACCESS_TOKEN", res.data.access);
-        localStorage.setItem("REFRESH_TOKEN", res.data.refresh);
-        setTimeout(() => navigate("/"), 100);
-      } else {
-        setSuccessMessage(
-          "تم إنشاء الحساب بنجاح! سيتم تحويلك لصفحة تسجيل الدخول."
-        );
-        setTimeout(() => navigate("/login"), 1500);
-      }
+      const { email, password, fullname, gender, phone } = formData;
+      const response = await axios.post(`${api_url}/api/signup/`, {
+        fullname: formData.name,
+        email: formData.email,
+        password: formData.password,
+        gender: formData.gender,
+        phone: formData.phone,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      console.log('Signup successful:', response.data);    
+      setTimeout(() => navigate("/login"), 1500);
+     
     } catch (error) {
       console.log("خطأ من السيرفر:", error.response?.data);
       alert(

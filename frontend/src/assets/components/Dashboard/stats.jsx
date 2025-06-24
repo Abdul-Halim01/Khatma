@@ -1,22 +1,44 @@
-import React, { useState } from "react";
-// import { FaChartBar, FaStar, FaBookOpen, FaHeart } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { FaChartBar, FaStar, FaBookOpen, FaHeart } from "react-icons/fa";
+import { fetchProtectedData } from "../../../api"; // Adjust path as needed
 
 const Stats = () => {
-
-  //دول هيجوا من الباك اند
-  const [userStats] = useState({
-    completedKhatmas: 12,
-    currentKhatmas: 3,
-    totalParticipants: 156,
-    averageDaily: 2.5,
-    streak: 15,
+  const [userStats, setUserStats] = useState({
+    completedKhatmas: 0,
+    currentKhatmas: 0,
+    totalParticipants: 0, // Not in current stats, will adjust
+    averageDaily: 0,
+    streak: 0,
   });
-  
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const data = await fetchProtectedData('api/stats/user/'); // Fetch user stats
+        setUserStats({
+          completedKhatmas: data.completed_khatmas || 0,
+          currentKhatmas: data.total_khatmas - data.completed_khatmas || 0, // Approximate
+          totalParticipants: data.totalParticipants, // Will need a new endpoint or calculation
+          averageDaily: data.average_daily_chapters || 0,
+          streak: data.current_streak || 0,
+        });
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load stats. Please try again.');
+        setLoading(false);
+      }
+    };
+    loadStats();
+  }, []);
+
+  if (loading) return <div>Loading stats...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+
+
   return (
     <div className="stats-container">
-      
-
       <div className="stats-grid">
         <div className={`stats-card`}>
           <div className="stats-card-icon">
