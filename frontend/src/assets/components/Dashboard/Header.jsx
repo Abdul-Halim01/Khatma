@@ -4,31 +4,27 @@ import "./styles/Header.css";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState ,useEffect } from "react";
 import axios from "axios";
-
+import { fetchProtectedData } from '../../../api'; // Adjust path
 /**
  * 
  * هحتاج بيانات المستخدم من الباك اند
  */
 
 const Header = ({ menuOpen, setMenuOpen }) => {
-
   const [userData, setUserData] = useState(null);
 
-  /**دي الفانكشن اللي هجيب بيها بيانات المستخدم من الباك اند */
-  function fetchUserData() {
-    axios.get("http://localhost:5000/api/user/me")
-      .then((res) => {
-        setUserData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  const fetchUserData = async () => {
+    try {
+      const data = await fetchProtectedData('api/user/me/');
+      setUserData(data);
+    } catch (err) {
+      console.error('Failed to fetch user data:', err);
+    }
+  };
 
   useEffect(() => {
     fetchUserData();
   }, []);
-
 
   const handleToggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -37,19 +33,18 @@ const Header = ({ menuOpen, setMenuOpen }) => {
   return (
     <header className="header">
       <div className="header-container">
-        {/* الشعار */}
         <div className="header-logo">
           <FaBookOpen className="header-icon" />
           <h1 className="header-title">ختمة</h1>
         </div>
-
-        {/* معلومات المستخدم */}
         <div className="header-user">
-          <img src={userImage} alt="User" className="user-image" />
-          <span className="user-name">محمد أحمد</span>
+          {userData && (
+            <>
+              <img src={userData.profile_picture || userImage} alt="User" className="user-image" />
+              <span className="user-name">{userData.fullname || 'محمد أحمد'}</span>
+            </>
+          )}
         </div>
-
-        {/* زر الفتح والإغلاق للجوال */}
         <div className="mobile-menu-button">
           <button onClick={handleToggleMenu}>
             {menuOpen ? <FaTimes /> : <FaBars />}

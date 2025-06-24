@@ -5,18 +5,26 @@ import "./styles/registration.css";
 import { Link } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa";
 import axios from "axios";
+// Two lines important for being use api in every time call API
 import api from "../../../api"
-
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../constant";
+import Dashboard from "../../../pages/UserDashboard";
+import { useNavigate } from "react-router-dom";
+import UserDashboard from "../../../pages/UserDashboard";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const api_url = import.meta.env.VITE_API_URL;
 
 /****
  *
  *  formData <= انا هبعتله بيانات الشخص
  *
  *
+ * 
  *  */
 
 const Login = () => {
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
@@ -46,29 +54,32 @@ const Login = () => {
     setIsLoading(true);
   
     try {
-      const response =  await api.post("/api/token/", {
+      // when use api if post use await api.post("route", Dict)
+      // Dict is what send to backend
+      const response =  await axios.post(`${api_url}/api/login/`, {
         username: formData.email.trim(),
         password: formData.password.trim(),
+      }, {
+        headers: { 'Content-Type': 'application/json' },
       });
-  
+
+      //Need to save them because will use in operation Authentication after
+      localStorage.setItem('accessToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+
       // نفترض أن الرد يحتوي على رسالة أو توكن أو بيانات المستخدم
       const { message } = response.data;
   
-
-
+      // when 
+      console.log(response);
       setSuccessMessage(message || "تم تسجيل الدخول بنجاح! مرحباً بك في منصة تلاوة القرآن الكريم");
-
-       localStorage.setItem(ACCESS_TOKEN, res.data.access);
-       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-
+    
       setFormData({ email: "", password: "" });
   
       setTimeout(() => setSuccessMessage(""), 3000);
   
       // يمكنك توجيه المستخدم إلى صفحة أخرى أو حفظ التوكن هنا
-      // navigate('/dashboard');
-      // localStorage.setItem('token', response.data.token);
-  
+      navigate("/UserDashboard");
     } catch (error) {
       const serverMessage = error?.response?.data?.message || "فشل في تسجيل الدخول. يرجى المحاولة مرة أخرى";
   console.log(error)
