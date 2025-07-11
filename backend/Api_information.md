@@ -7,7 +7,6 @@ A comprehensive API for managing Quran reading sessions (Khatmas), user progress
 ## Table of Contents
 
 - [Authentication](#authentication)
-- [Base URL](#base-url)
 - [Common Response Formats](#common-response-formats)
 - [Pagination](#pagination)
 - [API Endpoints](#api-endpoints)
@@ -29,13 +28,6 @@ The API uses JWT token authentication. Include the token in the Authorization he
 
 ```
 Authorization: Bearer <your-jwt-token>
-
-```
-
-## Base URL
-
-```
-https://your-api-domain.com/api/
 
 ```
 
