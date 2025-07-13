@@ -9,16 +9,22 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
+# Google Authenticaion
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+from django.conf import settings
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 from .models import (
     Khatma, KhatmaParticipant, ReadingSession,
-    Achievement, Notification
+    Achievement, Notification, Intention
 )
 from .serializers import (
     KhatmaListSerializer, KhatmaDetailSerializer, KhatmaCreateUpdateSerializer,
     ReadingSessionSerializer,
     UserSerializer, UserRegistrationSerializer, AchievementSerializer, NotificationSerializer,
-    UserStatsSerializer, KhatmaStatsSerializer
+    UserStatsSerializer, KhatmaStatsSerializer, IntentionSerializer
 )
 
 User = get_user_model()
@@ -62,6 +68,12 @@ class KhatmaListCreateView(generics.ListCreateAPIView):
                 is_public=True,
                 status='active'
             ).exclude(participants=self.request.user)
+
+        elif filter_type == 'completed':
+            return queryset.filter(
+                Q(creator=user) | Q(participants=user),
+                status='completed' 
+            ).distinct()
         
         return queryset
 
@@ -111,8 +123,11 @@ def join_khatma(request, khatma_id):
     if khatma.khatma_type == 'group':
         total_chapters = 30  # Quran has 30 chapters (Juz/Para)
         
-        # Get already assigned chapters
-        assigned_chapters = KhatmaParticipant.objects.filter(khatma=khatma).values_list('chapter_assigned', flat=True)
+        # Get already assigned chapters (excluding null values)
+        assigned_chapters = KhatmaParticipant.objects.filter(
+            khatma=khatma, 
+            chapter_assigned__isnull=False
+        ).values_list('chapter_assigned', flat=True)
         
         # Find first unassigned chapter
         chapter_assigned = None
@@ -124,8 +139,8 @@ def join_khatma(request, khatma_id):
         if chapter_assigned is None:
             return Response({'error': 'All chapters are already assigned'}, status=status.HTTP_400_BAD_REQUEST)
     else:
-        # For private khatmas, user can read any chapter (assign chapter 1 as default)
-        chapter_assigned = 1
+        # For private khatmas, no specific chapter assignment needed initially
+        chapter_assigned = None
     
     # Create participant
     KhatmaParticipant.objects.create(
@@ -139,6 +154,7 @@ def join_khatma(request, khatma_id):
         'chapter_assigned': chapter_assigned
     }, status=status.HTTP_201_CREATED)
 
+    
 @api_view(['DELETE'])
 @permission_classes([permissions.IsAuthenticated])
 def leave_khatma(request, khatma_id):
@@ -287,7 +303,8 @@ def khatma_stats(request, khatma_id):
             chapter_completion_status.append({
                 'chapter': participant.chapter_assigned,
                 'is_completed': participant.is_chapter_completed,
-                'assigned_user': participant.user.username
+                'assigned_user': participant.user.fullname,
+                'user_email':participant.user.email,
             })
     
     # Calculate average daily progress
@@ -421,3 +438,147 @@ def dashboard_data(request):
 def user_profile(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([permissions.IsAuthenticated])
+def user_khatma_intentions(request, khatma_id):
+    if request.method == 'GET':
+        # Get all intentions from the current user for the given khatma
+        intentions = Intention.objects.filter(khatma_id=khatma_id, user=request.user)
+        serializer = IntentionSerializer(intentions, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        #remove old if exist
+        Intention.objects.filter(khatma_id=khatma_id, user=request.user).delete()
+
+        # Create a new intention for the current user and khatma
+        serializer = IntentionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, khatma_id=khatma_id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def google_auth(request):
+    """
+    Handle Google OAuth authentication
+    """
+    try:
+        # Get the Google ID token from the request
+        google_token = request.data.get('token')
+        
+        if not google_token:
+            return Response({'error': 'Google token is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify the Google token
+        try:
+            idinfo = id_token.verify_oauth2_token(
+                google_token, 
+                google_requests.Request(), 
+                settings.GOOGLE_CLIENT_ID
+            )
+            
+            # Extract user info from Google token
+            email = idinfo['email']
+            name = idinfo.get('name', '')
+            picture = idinfo.get('picture', '')
+            
+        except ValueError as e:
+            return Response({'error': 'Invalid Google token'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if user exists
+        try:
+            user = User.objects.get(email=email)
+            # User exists, log them in
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'access': str(refresh.access_token),
+                'refresh': str(refresh),
+                'user_exists': True,
+                'user_id': user.id,
+                'fullname': user.fullname,
+                'email': user.email,
+                'message': 'تم تسجيل الدخول بنجاح'
+            }, status=status.HTTP_200_OK)
+            
+        except User.DoesNotExist:
+            # User doesn't exist, return info for signup
+            return Response({
+                'user_exists': False,
+                'google_data': {
+                    'email': email,
+                    'name': name,
+                    'picture': picture,
+                    'google_token': google_token  # Pass token for later use
+                },
+                'message': 'المستخدم غير موجود. يرجى إكمال بيانات التسجيل'
+            }, status=status.HTTP_200_OK)
+    
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def google_signup(request):
+    """
+    Complete Google signup with additional user data
+    """
+    try:
+        # Get data from request
+        google_token = request.data.get('google_token')
+        fullname = request.data.get('fullname')
+        email = request.data.get('email')
+        gender = request.data.get('gender')
+        phone = request.data.get('phone')
+        
+        if not all([google_token, fullname, email, gender, phone]):
+            return Response({'error': 'جميع البيانات مطلوبة'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify Google token again for security
+        try:
+            idinfo = id_token.verify_oauth2_token(
+                google_token, 
+                google_requests.Request(), 
+                settings.GOOGLE_CLIENT_ID
+            )
+            
+            if idinfo['email'] != email:
+                return Response({'error': 'البريد الإلكتروني غير متطابق'}, status=status.HTTP_400_BAD_REQUEST)
+                
+        except ValueError:
+            return Response({'error': 'رمز Google غير صالح'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            return Response({'error': 'المستخدم موجود بالفعل'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Create new user
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            fullname=fullname,
+            gender=gender,
+            phone=phone,
+            password=None  # No password for Google users
+        )
+        
+        # Generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+        
+        return Response({
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'user_id': user.id,
+            'fullname': user.fullname,
+            'email': user.email,
+            'message': 'تم إنشاء الحساب بنجاح'
+        }, status=status.HTTP_201_CREATED)
+        
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

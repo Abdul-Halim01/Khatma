@@ -59,13 +59,14 @@ class Khatma(models.Model):
             total_assignments = self.participants.count()
             if total_assignments == 0:
                 return 0
-            completed_assignments = self.reading_sessions.filter(is_completed=True).values('user').distinct().count()
-            return min((completed_assignments / total_assignments) * 100, 100)
+            
+            completed_assignments = self.reading_sessions.filter(is_completed=True).count()
+            print("Complete assigments :",completed_assignments)
+            return round(min((completed_assignments / 30) * 100, 100),2)
         else:
             # For private khatmas, all 30 chapters should be completed
-            total_chapters = 30
-            completed_chapters = self.reading_sessions.filter(is_completed=True).values('chapter_assigned').distinct().count()
-            return min((completed_chapters / total_chapters) * 100, 100)
+            completed_assignments = self.reading_sessions.filter(is_completed=True).count()
+            return round(min((completed_assignments / 30) * 100, 100),2)
 
     @property
     def days_remaining(self):
@@ -80,20 +81,35 @@ class KhatmaParticipant(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     joined_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    chapter_assigned = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
+    # Make chapter_assigned nullable - will be assigned when joining or creating reading sessions
+    chapter_assigned = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(30)],
+        null=True, 
+        blank=True
+    )
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['user', 'khatma'], name='unique_user_khatma'),
-            models.UniqueConstraint(fields=['khatma', 'chapter_assigned'], name='unique_chapter_assignment')
+            # Update constraint to handle null values
+            models.UniqueConstraint(
+                fields=['khatma', 'chapter_assigned'], 
+                name='unique_chapter_assignment',
+                condition=models.Q(chapter_assigned__isnull=False)
+            )
         ]
 
     def __str__(self):
-        return f"{self.user.username} in {self.khatma.name} - Chapter {self.chapter_assigned}"
+        chapter_text = f"Chapter {self.chapter_assigned}" if self.chapter_assigned else "Creator"
+        return f"{self.user.username} in {self.khatma.name} - {chapter_text}"
 
     @property
     def is_chapter_completed(self):
         """Check if the assigned chapter is completed"""
+        if not self.chapter_assigned:
+            # No specific chapter assigned yet
+            return False
+        
         return self.khatma.reading_sessions.filter(
             user=self.user,
             chapter_assigned=self.chapter_assigned,
@@ -114,8 +130,7 @@ class ReadingSession(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['khatma', 'user', 'chapter_assigned'], 
-                condition=models.Q(is_completed=True),
-                name='unique_completed_chapter_per_user'
+                name='unique_chapter_per_user_per_khatma'
             )
         ]
 
@@ -171,3 +186,11 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username}: {self.title}"
+
+
+# Intention class
+class Intention(models.Model):
+    khatma = models.ForeignKey(Khatma, related_name='intentions', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='intentions', on_delete=models.CASCADE)
+    intention  = models.JSONField(default=list)
+    created_at = models.DateTimeField(auto_now_add=True)
