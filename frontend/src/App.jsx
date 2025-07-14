@@ -1,4 +1,3 @@
-import react from "react";
 import { useEffect } from "react";
 import ProtectedRoute from "./assets/components/ProtectedRoute";
 import {
@@ -32,31 +31,20 @@ function App() {
   return (
     <HashRouter>
       <ScrollToTop />
-
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/registration" element={<Login />} />
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/UserDashboard" element={<UserDashboard />} />
-
-        {/* مهمه متحذفهاش 2- دي لسه مش مفهوم المنطق بتاعها هتظهر امتي وهكذا ولكن هي خلصانه */}
-         <Route path="/KhatmahPage" element={<KhatmahPage />} /> 
+        <Route path="/KhatmahPage/:khatmaId" element={<KhatmahPage />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="*" element={<Notfound />} />
-
-        <Route
-          path="/UserDashboard"
-          element={
-            <ProtectedRoute>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
       </Routes>
     </HashRouter>
   );
 }
 
+//to make page Scroll to top when navigate
 function ScrollToTop() {
   const { pathname } = useLocation();
 

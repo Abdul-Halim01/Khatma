@@ -2,11 +2,13 @@
   display: flex;
   gap: 10px;
   justify-content: space-between;
+  margin: 15px 0;
 }
 
 .Dashboard-content aside {
   width: 200px;
 }
+
 .Dashboard-content section {
   width: 100%;
   padding: 1.5rem;
@@ -14,7 +16,7 @@
   border-radius: 35px;
 }
 
-@media (min-width: 765px) {
+@media (min-width: 768px) {
   .Dashboard-content section {
     width: calc(100% - 220px);
   }

@@ -11,7 +11,7 @@ import { fetchProtectedData } from '../../../api'; // Adjust path
  */
 
 const Header = ({ menuOpen, setMenuOpen }) => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState("مستخدم مجهول");
 
   const fetchUserData = async () => {
     try {
@@ -41,7 +41,7 @@ const Header = ({ menuOpen, setMenuOpen }) => {
           {userData && (
             <>
               <img src={userData.profile_picture || userImage} alt="User" className="user-image" />
-              <span className="user-name">{userData.fullname || 'محمد أحمد'}</span>
+              <span className="user-name">{userData.fullname || 'مستخدم مجهول'}</span>
             </>
           )}
         </div>
