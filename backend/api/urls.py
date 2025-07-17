@@ -54,5 +54,11 @@ urlpatterns = [
     #Google Authentication:
     path('google-auth/', views.google_auth, name='google_auth'),
     path('google-signup/', views.google_signup, name='google_signup'),
-    
+
+    #Home page
+    path("homepage/",views.homepage,name="homepage-khatma"),
+
+    # Completed Khatma
+    path("khatma/completed/",views.CompletedKhatmaUserView.as_view(),name="completed_khatma")
+
 ]

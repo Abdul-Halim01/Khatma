@@ -3,6 +3,7 @@ from rest_framework import generics, permissions, status, filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Q, Sum, Count, Avg
 from django.utils import timezone
@@ -582,3 +583,59 @@ def google_signup(request):
         
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def homepage(request):
+    queryset =  Khatma.objects.all()
+    print("Qy:",queryset)
+    serializer = KhatmaListSerializer(queryset[:7], many=True, context={'request': request})
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def completed_khatma(request):
+    queryset = Khatma.objects.select_related('creator').prefetch_related('participants')
+    queryset = queryset.filter(
+                Q(creator=user) | Q(participants=user),
+                status='completed' 
+            ).distinct()
+    
+    pass
+
+class CompletedKhatmaUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_khatma_details(self, user):
+        queryset = Khatma.objects.select_related('creator').prefetch_related('participants')
+        return queryset.filter(
+            Q(creator=user) | Q(participants=user),
+            status='completed' 
+        ).distinct()
+
+    def get_intention(self, user, khatma_id):
+        intentions = Intention.objects.filter(khatma_id=khatma_id, user=user)
+        serializer = IntentionSerializer(intentions, many=True)
+        return serializer.data
+
+    def get_completed_chapters(self, user, khatma_id):
+        chapters = KhatmaParticipant.objects.filter(
+            user=user,
+            khatma_id=khatma_id,
+            chapter_assigned__isnull=False
+        ).values_list('chapter_assigned', flat=True)
+        return list(chapters)
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        khatmas = self.get_khatma_details(user)
+        data = []
+
+        for khatma in khatmas:
+            serialized = KhatmaListSerializer(khatma, context={'request': request}).data
+            serialized['intention'] = self.get_intention(user, khatma.id)
+            serialized['jza'] = self.get_completed_chapters(user, khatma.id)
+            data.append(serialized)
+
+        return Response(data)
+
