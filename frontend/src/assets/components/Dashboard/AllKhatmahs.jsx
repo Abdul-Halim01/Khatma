@@ -15,7 +15,7 @@ const AllKhatmahs = () => {
   const fetchkhatmahSessions = async () => {
     try {
       const khatmahSessions = await fetchProtectedData(
-        "api/khatmas/?filter=public"
+        "api/khatmas/?filter=joinable"
       );
       console.log(khatmahSessions);
       setKhatmahSessions(khatmahSessions.results);

@@ -3,8 +3,9 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import (
     Khatma, KhatmaParticipant, ReadingSession,
-    Achievement, Notification
+    Achievement, Notification, Intention
 )
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -87,7 +88,26 @@ class ReadingSessionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
-        return super().create(validated_data)
+        
+        # Use update_or_create to handle existing sessions
+        khatma = validated_data.pop('khatma')
+        user = validated_data['user']
+        chapter_assigned = validated_data['chapter_assigned']
+        
+        # Define the unique fields for lookup
+        defaults = {
+            'is_completed': validated_data.get('is_completed', True),
+            'reading_date': validated_data.get('reading_date', timezone.now())
+        }
+        
+        session, created = ReadingSession.objects.update_or_create(
+            khatma=khatma,
+            user=user,
+            chapter_assigned=chapter_assigned,
+            defaults=defaults
+        )
+        
+        return session
 
     def validate_chapter_assigned(self, value):
         if not (1 <= value <= 30):
@@ -95,23 +115,43 @@ class ReadingSessionSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        """Validate that user is assigned this chapter in group khatmas"""
+        """Validate chapter assignment and update participant if needed"""
         request = self.context.get('request')
         khatma = self.context.get('khatma')  # Will be set in view
         
-        if khatma and khatma.khatma_type == 'group' and request:
+        if khatma and request:
             user_participant = KhatmaParticipant.objects.filter(
                 khatma=khatma,
-                user=request.user,
-                chapter_assigned=data['chapter_assigned']
+                user=request.user
             ).first()
             
             if not user_participant:
                 raise serializers.ValidationError(
-                    f"You are not assigned to chapter {data['chapter_assigned']} in this group khatma."
+                    "You are not a participant in this khatma."
                 )
+            
+            # For group khatmas, handle chapter assignment
+            if khatma.khatma_type == 'group':
+                # Get all currently assigned chapters (excluding this user's current assignment)
+                assigned_chapters = KhatmaParticipant.objects.filter(
+                    khatma=khatma, 
+                    chapter_assigned__isnull=False
+                ).exclude(user=request.user).values_list('chapter_assigned', flat=True)
+                
+                # Check if the requested chapter is available
+                if data['chapter_assigned'] in assigned_chapters:
+                    raise serializers.ValidationError(
+                        f"Chapter {data['chapter_assigned']} is already assigned to another participant."
+                    )
+                
+                # Update the participant's chapter assignment (this will handle both new assignment and reassignment)
+                user_participant.chapter_assigned = data['chapter_assigned']
+                user_participant.save()
+            
+            # For private khatmas, users can read any chapter
         
         return data
+
 
 class KhatmaListSerializer(serializers.ModelSerializer):
     """Khatma list serializer (for listing khatmas)"""
@@ -189,6 +229,7 @@ class KhatmaDetailSerializer(serializers.ModelSerializer):
             return [i for i in range(1, 31) if i not in assigned_chapters]
         return list(range(1, 31))  # All chapters available for private khatmas
 
+
 class KhatmaCreateUpdateSerializer(serializers.ModelSerializer):
     """Serializer for creating/updating Khatmas"""
     class Meta:
@@ -199,7 +240,20 @@ class KhatmaCreateUpdateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['creator'] = self.context['request'].user
-        return super().create(validated_data)
+        khatma = super().create(validated_data)
+        
+        # Automatically add creator as participant without chapter assignment
+        # They will choose their chapter when creating a reading session
+        KhatmaParticipant.objects.create(
+            khatma=khatma,
+            user=self.context['request'].user,
+            chapter_assigned=None  # No chapter assigned initially
+        )
+        
+        return khatma
+
+
+
 
 class AchievementSerializer(serializers.ModelSerializer):
     """Achievement serializer"""
@@ -253,3 +307,10 @@ class KhatmaStatsSerializer(serializers.Serializer):
     chapter_completion_status = serializers.ListField(
         child=serializers.DictField()
     )  # List of {chapter, is_completed, assigned_user}
+
+
+# Intentions serializer
+class IntentionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Intention
+        fields = ['id', 'intention', 'created_at']

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./styles/KhatmahTable.css";
 import SuccessMessage from "../reusable/SuccessMessage";
 import { ProgressBar } from "../reusable/MainKhatmaCard";
@@ -15,7 +14,11 @@ const API_BASE = "http://127.0.0.1:8087/api"; // Change to your backend URL
 const token = localStorage.getItem("accessToken"); // Replace with actual token from login
 
 const KhatmahTable = ({ khatmaId }) => {
-  const nav = useNavigate();
+  // Default headers for all API requests
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
 
   const [response, setResponse] = useState(null); // Used to store and display API responses
   const [juzData, setJuzData] = useState([
@@ -230,11 +233,7 @@ const KhatmahTable = ({ khatmaId }) => {
       isCompleted: false,
     },
   ]);
-  // Default headers for all API requests
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
+
   const [share, setShare] = useState(false);
 
   // const handleReaderNameChange = (id, value) => {
@@ -253,41 +252,42 @@ const KhatmahTable = ({ khatmaId }) => {
   // };
 
   const handleCompletionChange = (id, checked) => {
-    setJuzData((prev) =>
-      prev.map((juz) =>
-        juz.id === id ? { ...juz, isCompleted: checked } : juz
-      )
-    );
+    handleRegest(id, checked);
+
+    // setJuzData((prev) =>
+    //   prev.map((juz) =>
+    //     juz.id === id ? { ...juz, isCompleted: checked } : juz
+    //   )
+    // );
+    // handleRegest(id, true);
   };
 
   // Get all chapters and their completion status + who completed + khatma completion %
   const showChapterStatus = (khatmaId) => {
-    fetch(`${API_BASE}/stats/khatma/${khatmaId}/`, { headers })
+    fetch(`${API_BASE}/khatmas/${khatmaId}/sessions/`, { headers })
       .then(async (res) => {
         const text = await res.text();
-
-        // ✅ التحقق من حالة الاستجابة
-        if (res.status == 401) {
-          nav("/registration");
-        }
 
         try {
           const json = JSON.parse(text);
           const takenChapters = Array.from({ length: 30 }, (_, i) => {
             const chapterNumber = i + 1;
-            const match = json.chapter_completion_status.find(
-              (ch) => ch.chapter === chapterNumber
+            const match = json.results.find(
+              (ch) => ch.chapter_assigned === chapterNumber
             );
             return {
               chapter: chapterNumber,
               taken: Boolean(match),
               is_completed: match?.is_completed || false,
-              assigned_user: match?.assigned_user || null,
+              assigned_user: match?.user?.fullname || null,
             };
           });
 
           setResponse({
-            completion_percentage: json.completion_percentage,
+            // لو مفيش `completion_percentage` في الرد، احسبه يدويًا مثلًا:
+            completion_percentage: Math.round(
+              (json.results.filter((r) => r.is_completed).length / 30) * 100
+            ),
             chapters: takenChapters,
           });
         } catch (parseError) {
@@ -295,22 +295,24 @@ const KhatmahTable = ({ khatmaId }) => {
           console.log("Raw response text:", text);
         }
       })
+
       .catch((err) => {
         console.error("Fetch error:", err.message);
       });
   };
+  useEffect(() => {
+    showChapterStatus(khatmaId);
+  }, []);
 
   //to send a user that choose a jus
-  const handleRegest = (juzData, index) => {
-    console.log("كده دخلنا فانكشن الارسال");
-    console.log(juzData[index].juzNumber, juzData[index].isCompleted);
+  const handleRegest = (juzNumber, isCompleted) => {
     const chooseJuz = async () => {
       try {
         await fetchProtectedData(`/api/khatmas/${khatmaId}/sessions/`, {
           method: "POST",
           data: {
-            chapter_assigned: juzData[index].juzNumber,
-            is_completed: juzData[index].isCompleted,
+            chapter_assigned: juzNumber,
+            is_completed: isCompleted,
           },
         });
         showChapterStatus(khatmaId);
@@ -327,14 +329,6 @@ const KhatmahTable = ({ khatmaId }) => {
 
     chooseJuz();
   };
-
-  useEffect(() => {
-    showChapterStatus(khatmaId);
-  }, []);
-
-  // useEffect(() => {
-  //   console.log(response);
-  // }, [response]);
 
   return response ? (
     <div className="quran-table-container">
@@ -369,7 +363,7 @@ const KhatmahTable = ({ khatmaId }) => {
         </div>
       </div>
       <ProgressBar progress={response.completion_percentage} />
-      <Intentions />
+      <Intentions khatmaId={khatmaId} />
       <div className="table-wrapper">
         <h1 className="creator">مسؤل الختمه : شهاب احمد</h1>
         <table className="quran-table">
@@ -387,7 +381,9 @@ const KhatmahTable = ({ khatmaId }) => {
             {juzData.map((juz, index) => (
               <tr
                 key={juz.id}
-                className={juz.isCompleted ? "completed-row" : ""}
+                className={
+                  response.chapters[index].taken ? "completed-row" : ""
+                }
               >
                 <td>
                   {response.chapters[index].assigned_user ? (
@@ -398,7 +394,7 @@ const KhatmahTable = ({ khatmaId }) => {
                       value="هقرأ الجزء ده"
                       onClick={() =>
                         // handleReaderNameChange(juz.id, e.target.value)
-                        handleRegest(juzData, index)
+                        handleRegest(juzData[index].juzNumber, false)
                       }
                       className="reader-input"
                     />
@@ -421,10 +417,15 @@ const KhatmahTable = ({ khatmaId }) => {
                 <td>
                   <input
                     type="checkbox"
-                    checked={response.chapters[index].is_completed}
-                    onChange={(e) =>
-                      handleCompletionChange(juz.id, e.target.checked)
+                    checked={
+                      response.chapters[index].is_completed ||
+                      juzData[index].isCompleted
                     }
+                    onClick={(e) => {
+                      if (response.chapters[index].assigned_user) {
+                        handleCompletionChange(juz.id, e.target.checked);
+                      }
+                    }}
                     className="completion-checkbox"
                   />
                 </td>
@@ -437,7 +438,7 @@ const KhatmahTable = ({ khatmaId }) => {
   ) : null;
 };
 
-function Intentions() {
+function Intentions({ khatmaId }) {
   //هتتخزن في الداتا بيز وتيجي منها
   const [intention, setIntention] = useState([""]);
   const [successMessage, setSuccessMessage] = useState("");
@@ -449,13 +450,13 @@ function Intentions() {
     const intetionsKhatma = async () => {
       try {
         if (intention.length > 0) {
-          await fetchProtectedData("api/khatmas/", {
+          await fetchProtectedData(`api/khatmas/${khatmaId}/intentions/`, {
             method: "POST",
             data: JSON.stringify({
               intention: intention,
             }),
           });
-          setSuccessMessage("تم حفظ النية بنجاح");
+          setSuccessMessage("تم الحفظ بنجاح");
           setTimeout(() => {
             setSuccessMessage("");
           }, 1000);
@@ -468,6 +469,25 @@ function Intentions() {
     intetionsKhatma();
   };
 
+  //هجيب النوايا
+  const getintetionsKhatma = async () => {
+    try {
+      if (intention.length > 0) {
+        const data = await fetchProtectedData(
+          `api/khatmas/${khatmaId}/intentions/`
+        );
+        setIntention(data[0].intention);
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
+  useEffect(() => {
+    getintetionsKhatma();
+  }, []);
   //هتعدل النوايا
   const EditIntention = (newIntention, index) => {
     setIntention((prev) =>
@@ -515,7 +535,7 @@ function Intentions() {
           </div>
 
           <button type="submit" className="intentions-button">
-            حفظ النية
+            حفظ
           </button>
         </div>
       </form>

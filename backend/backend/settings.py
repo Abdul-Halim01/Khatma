@@ -126,3 +126,4 @@ STATIC_URL = 'static/'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+GOOGLE_CLIENT_ID = "636083696108-lb89bp6fbehibprukmb0rue1th19f7d9.apps.googleusercontent.com"

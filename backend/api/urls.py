@@ -29,6 +29,9 @@ urlpatterns = [
     path('stats/user/', views.user_stats, name='user-stats'),
     path('stats/user/<int:user_id>/', views.user_stats, name='user-stats-detail'),
     path('stats/khatma/<int:khatma_id>/', views.khatma_stats, name='khatma-stats'),
+
+    #intentions urls
+    path('khatmas/<int:khatma_id>/intentions/', views.user_khatma_intentions, name='user-khatma-intentions'),
     
     # Notification URLs
     path('notifications/', views.NotificationListView.as_view(), name='notification-list'),
@@ -47,4 +50,9 @@ urlpatterns = [
 
     #Profile
     path('user/me/', views.user_profile, name='user-profile'),
+
+    #Google Authentication:
+    path('google-auth/', views.google_auth, name='google_auth'),
+    path('google-signup/', views.google_signup, name='google_signup'),
+    
 ]
