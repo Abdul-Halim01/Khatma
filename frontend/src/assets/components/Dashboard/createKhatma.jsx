@@ -1,29 +1,65 @@
-import React, { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { MdGroups, MdOutlineEmojiEvents } from 'react-icons/md';
-import { BsBook } from 'react-icons/bs';
-import "./styles/createKhatma.css"
-
-const CreateKhatma = ({ darkMode = false }) => {
+import React, { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { MdGroups, MdOutlineEmojiEvents } from "react-icons/md";
+import { BsBook } from "react-icons/bs";
+import "./styles/createKhatma.css";
+import { fetchProtectedData } from "../../../api";
+const CreateKhatma = ({ setActiveSection }) => {
   const [khatmaDetails, setKhatmaDetails] = useState({
-    name: '',
-    description: '',
-    type: '',
-    duration: ''
+    name: "",
+    description: "",
+    type: "",
+    duration: "",
   });
+
+  const main_khatma_type = [
+    {
+      type: "group",
+      icon: MdGroups,
+      title: "ختمة جماعية",
+      color: "emerald",
+    },
+    {
+      type: "private",
+      icon: MdOutlineEmojiEvents,
+      title: "ختمة خاصة",
+      color: "purple",
+    },
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setKhatmaDetails(prev => ({
+    setKhatmaDetails((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement khatma creation logic
-    console.log('Creating khatma:', khatmaDetails);
+    const createKhatma = async () => {
+      try {
+        const res = await fetchProtectedData("api/khatmas/", {
+          method: "POST",
+          data: JSON.stringify({
+            name: khatmaDetails.name,
+            khatma_type: khatmaDetails.type,
+            target_days: khatmaDetails.duration,
+            is_public: khatmaDetails.type === "private" ? false : true,
+            description: khatmaDetails.description,
+          }),
+        });
+        console.log(res);
+        setTimeout(() => {
+          setActiveSection("overview");
+        }, 300);
+      } catch (error) {
+        console.error("Error:", error.message);
+      }
+    };
+
+    createKhatma();
   };
 
   return (
@@ -37,24 +73,13 @@ const CreateKhatma = ({ darkMode = false }) => {
       </div>
 
       <div className="khatma-types-grid">
-        {[
-          {
-            type: "group",
-            icon: MdGroups,
-            title: "ختمة جماعية",
-            color: "emerald",
-          },
-          {
-            type: "private",
-            icon: MdOutlineEmojiEvents,
-            title: "ختمة خاصة",
-            color: "purple",
-          },
-        ].map((item, i) => (
+        {main_khatma_type.map((item, i) => (
           <div
             key={i}
-            className={`khatma-type-card ${darkMode ? 'dark-mode' : ''}`}
-            onClick={() => setKhatmaDetails(prev => ({ ...prev, type: item.type }))}
+            className={`khatma-type-card`}
+            onClick={() =>
+              setKhatmaDetails((prev) => ({ ...prev, type: item.type }))
+            }
           >
             <div className="card-content">
               <item.icon className={`type-icon ${item.color}`} />
@@ -69,7 +94,7 @@ const CreateKhatma = ({ darkMode = false }) => {
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className={`details-form ${darkMode ? 'dark-mode' : ''}`}>
+      <form onSubmit={handleSubmit} className={`details-form`}>
         <h3 className="form-title">
           <BsBook className="form-icon" />
           تفاصيل الختمة
@@ -81,7 +106,7 @@ const CreateKhatma = ({ darkMode = false }) => {
             value={khatmaDetails.name}
             onChange={handleInputChange}
             placeholder="اسم الختمة"
-            className={`form-input ${darkMode ? 'dark-mode' : ''}`}
+            className={`form-input`}
           />
           <textarea
             name="description"
@@ -89,32 +114,29 @@ const CreateKhatma = ({ darkMode = false }) => {
             onChange={handleInputChange}
             placeholder="وصف الختمة (اختياري)"
             rows="3"
-            className={`form-input ${darkMode ? 'dark-mode' : ''}`}
+            className={`form-input}`}
           />
           <select
             name="type"
             value={khatmaDetails.type}
             onChange={handleInputChange}
-            className={`form-input ${darkMode ? 'dark-mode' : ''}`}
+            className={`form-input`}
           >
             <option value="">نوع الختمه</option>
             <option value="private">خاصه</option>
             <option value="group">عامة</option>
           </select>
           <div className="form-footer">
-            <input type="number" name="duration" value={khatmaDetails.duration} min={1} onChange={handleInputChange} placeholder="مدة الختمة بالأيام" className={`form-input`} />
-           {/* <select
+            <input
+              type="number"
               name="duration"
               value={khatmaDetails.duration}
+              min={1}
               onChange={handleInputChange}
-              className={`form-input duration-select ${darkMode ? 'dark-mode' : ''}`}
-            >
-              <option value="">عدد الأيام المتوقع</option>
-              <option value="7">7 أيام</option>
-              <option value="14">14 يوم</option>
-              <option value="30">30 يوم</option>
-              <option value="custom">مخصص</option>
-            </select>*/}
+              placeholder="مدة الختمة بالأيام"
+              className={`form-input`}
+            />
+
             <button type="submit" className="submit-button">
               إنشاء الختمة
             </button>

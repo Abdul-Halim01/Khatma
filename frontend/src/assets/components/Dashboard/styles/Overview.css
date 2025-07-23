@@ -1,9 +1,8 @@
 /* ====================
    Welcome Section
 ==================== */
-.overview{
+.overview {
   background-color: var(--background-light);
-
 }
 .overview .welcome-title {
   font-size: 1.875rem;
@@ -22,70 +21,73 @@
 /* ====================
    ختماتي (My Khatemat)
 ==================== */
-.myKh_container {
+.myKh-container {
   padding: 1.5rem;
 }
 
-.myKh_header {
+.myKh-header {
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.myKh_icon {
+.myKh-icon {
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
 }
 
-.myKh_icon-inner {
+.myKh-icon-inner {
   font-size: 2rem;
   color: var(--color-primary);
 }
 
-.myKh_title {
+.myKh-title {
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
-.myKh_subtitle {
+.myKh-subtitle {
   color: #888;
   font-size: 1rem;
 }
 
-.myKh_grid {
+.myKh-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
 }
 
-.myKh_card {
+.myKh-card {
   background-color: #fff;
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s;
   cursor: pointer;
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
 }
 
-.myKh_card:hover {
+.myKh-card:hover {
   transform: translateY(-5px);
 }
 
-.myKh_card-header {
+.myKh-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 }
 
-.myKh_type {
+.myKh-type {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-.myKh_type-icon {
+.myKh-type-icon {
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -95,31 +97,32 @@
   align-items: center;
 }
 
-.myKh_type-icon.private {
+.myKh-type-icon.private {
   background-color: #d32f2f;
   color: white;
 }
 
-.myKh_type-icon.public {
+.myKh-type-icon.public {
   background-color: #1976d2;
   color: white;
 }
 
-.myKh_icon-small {
+.myKh-icon-small {
   font-size: 1rem;
 }
 
-.myKh_name {
+.myKh-name {
   font-size: 1.1rem;
   font-weight: 600;
+  margin-bottom: 5px;
 }
 
-.myKh_progress-note {
+.myKh-progress-note {
   font-size: 0.875rem;
   color: #666;
 }
 
-.myKh_exit-button {
+.myKh-exit-button {
   background-color: transparent;
   border: 1px solid #d32f2f;
   color: #d32f2f;
@@ -130,29 +133,29 @@
   transition: background-color 0.2s;
 }
 
-.myKh_exit-button:hover {
+.myKh-exit-button:hover {
   background-color: #d32f2f;
   color: white;
 }
 
-.myKh_progress-wrapper {
+.myKh-progress-wrapper {
   margin-top: 1rem;
 }
 
-.myKh_progress-bar-bg {
+.myKh-progress-bar-bg {
   height: 8px;
   background-color: #e0e0e0;
   border-radius: 4px;
   overflow: hidden;
 }
 
-.myKh_progress-bar-fill {
+.myKh-progress-bar-fill {
   height: 100%;
   background-color: var(--color-available);
   transition: width 0.3s ease;
 }
 
-.myKh_progress-text {
+.myKh-progress-text {
   margin-top: 0.5rem;
   font-size: 0.875rem;
   color: #555;
@@ -166,7 +169,6 @@
   margin-bottom: 2rem;
 }
 
-
 .stats-icon-wrapper {
   width: 64px;
   height: 64px;
@@ -178,7 +180,6 @@
   box-shadow: 0 4px 12px var(--shadow-light);
   margin-bottom: 1rem;
 }
-
 
 .stats-grid {
   display: grid;
@@ -215,7 +216,7 @@
    Responsive (Tablet & Desktop)
 ==================== */
 @media (min-width: 640px) {
-  .myKh_grid {
+  .myKh-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 
@@ -236,7 +237,7 @@
     text-align: left;
   }
 
-  .myKh_container {
+  .myKh-container {
     padding: 2rem 4rem;
   }
 
