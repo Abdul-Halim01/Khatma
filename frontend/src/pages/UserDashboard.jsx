@@ -22,12 +22,14 @@ function UserDashboard() {
             menuOpen={menuOpen}
             setMenuOpen={setMenuOpen}
           />
-         {activeSection === "overview" && <Overview />}
-         {activeSection === "newKhatma" && <CreateKhatma />}
-         {activeSection === "joinKhatma" && <AllKhatmahs />}
-         {activeSection === "finishedKhatmahs" && <FinishedKhatmah />}
+          {activeSection === "overview" && <Overview />}
+          {activeSection === "newKhatma" && (
+            <CreateKhatma setActiveSection={setActiveSection} />
+          )}
+          {activeSection === "joinKhatma" && <AllKhatmahs />}
+          {activeSection === "finishedKhatmahs" && <FinishedKhatmah />}
 
-         {/* {activeSection === "myKhatmas" && <MyKhatmahs />}*/}
+          {/* {activeSection === "myKhatmas" && <MyKhatmahs />}*/}
         </div>
       </div>
     </section>

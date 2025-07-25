@@ -1,4 +1,4 @@
-.quran-table-container{
+.quran-table-container {
   padding: 10px 0;
 }
 .table-header {
@@ -21,23 +21,75 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
+  flex-direction: column-reverse;
 }
-.table-header-content{
+
+.table-header-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-.table-header .back{
+.table-header-options {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  width: 100%;
+  gap: 10px;
+}
+.table-header-options .back,
+.table-header-options .share-icon {
   color: white;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   text-decoration: none;
-  margin-right: 10px;
+  transition: var(--transition);
+  cursor: pointer;
 }
-.quran-table-container .progress-section{
-margin-top: 150px;
+.table-header-options .back:hover,
+.table-header-options .share-icon:hover {
+  scale: 1.1;
+  transform: translateX(-5px);
+}
+.table-header-options .sharelink {
+  position: fixed;
+  gap: 10px;
+  background-color: var(--card-background);
+  color: var(--primary-dark);
+  width: 250px;
+  top: 60px;
+  left: 20px;
+  padding: 10px 5px;
+  border-radius: 5px;
+  animation: fromleft 0.3s linear;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.table-header-options .sharelink p {
+  overflow: hidden;
+  flex: 1;
+  height: 20px;
+}
+.table-header-options .sharelink svg {
+  color: var(--color-available);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.table-header-options .sharelink svg:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+.table-header-options .table-type {
+  padding: 5px;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+}
+
+.quran-table-container .progress-section {
+  margin-top: 150px;
 }
 .table-title {
   font-size: 18px;
@@ -124,18 +176,14 @@ margin-top: 150px;
   text-align: center;
   direction: rtl;
   transition: var(--transition);
-  background-color: white;
+  background-color: var(--color-available);
+  cursor: pointer;
+  color: var(--background-light);
 }
 
-.reader-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
+.reader-input:hover {
+  scale: 1.05;
   box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.1);
-}
-
-.reader-input::placeholder {
-  color: var(--text-secondary);
-  text-align: center;
 }
 
 .juz-number {
@@ -294,7 +342,6 @@ margin-top: 150px;
   }
 }
 
-
 .intentions {
   background-color: #fff;
   border-radius: 8px;
@@ -317,6 +364,18 @@ margin-top: 150px;
   gap: 1rem;
 }
 
+.intention-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.intention-item .remove-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-reserved);
+}
+
 .intentions-textarea {
   width: 100%;
   padding: 0.75rem;
@@ -324,19 +383,19 @@ margin-top: 150px;
   border-radius: 4px;
   font-size: 1rem;
   resize: vertical;
-  min-height: 100px;
+  height: 50px;
   text-align: right;
   direction: rtl;
 }
 
 .intentions-textarea:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #4caf50;
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
-.intentions-submit {
-  background-color: #4CAF50;
+.intentions-button {
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -347,11 +406,25 @@ margin-top: 150px;
   align-self: flex-end;
 }
 
-.intentions-submit:hover {
+.intentions-button:hover {
   background-color: #45a049;
 }
 
-.intentions-submit:focus {
+.intentions-button:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.4);
-} 
+}
+.intentions-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+@keyframes fromleft {
+  from {
+    transform: translateX(-250px);
+  }
+  to {
+    transform: translateX(20px);
+  }
+}

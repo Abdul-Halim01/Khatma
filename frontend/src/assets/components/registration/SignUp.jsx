@@ -7,11 +7,7 @@ import { FaChevronLeft } from "react-icons/fa";
 import api from "../../../api";
 import axios from "axios";
 import SuccessMessage from "../reusable/SuccessMessage";
-
 const api_url = import.meta.env.VITE_API_URL;
-
-const api_url = import.meta.env.VITE_API_URL;
-
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
 
@@ -93,7 +89,7 @@ const SignUp = ({ route = "/api/user/register/", method = "register" }) => {
         headers: { 'Content-Type': 'application/json' },
       });
       console.log('Signup successful:', response.data);    
-      setTimeout(() => navigate("/login"), 1500);
+      setTimeout(() => navigate("/registration"), 1500);
      
     } catch (error) {
       console.log("خطأ من السيرفر:", error.response?.data);

@@ -84,7 +84,6 @@
   }
   .sidebar {
     position: sticky;
-    top: 6rem;
     transform: translateX(0);
     width: fit-content;
     height: 100vh;

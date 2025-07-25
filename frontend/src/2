@@ -1,0 +1,31 @@
+import React from "react";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+
+const GoogleLoginComponent = () => {
+  const handleLoginSuccess = async (credentialResponse) => {
+    const { credential } = credentialResponse;
+
+    // Send token to Django backend
+    const res = await axios.post("http://localhost:8087/auth/social/login/", {
+      access_token: credential,
+      provider: "google",
+    });
+
+    if (res.data.user) {
+      console.log("Logged in:", res.data.user);
+    } else {
+      // Redirect to custom signup with pre-filled info
+      const { email, name } = res.data.extra_data;
+      window.location.href = `/signup?email=${email}&name=${name}`;
+    }
+  };
+
+  return (
+    <GoogleOAuthProvider clientId="636083696108-lb89bp6fbehibprukmb0rue1th19f7d9.apps.googleusercontent.com">
+      <GoogleLogin onSuccess={handleLoginSuccess} onError={() => alert("Login failed")} />
+    </GoogleOAuthProvider>
+  );
+};
+
+export default GoogleLoginComponent;

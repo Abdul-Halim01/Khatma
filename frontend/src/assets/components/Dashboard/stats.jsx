@@ -16,7 +16,7 @@ const Stats = () => {
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const data = await fetchProtectedData('api/stats/user/'); // Fetch user stats
+        const data = await fetchProtectedData("api/stats/user/"); // Fetch user stats
         setUserStats({
           completedKhatmas: data.completed_khatmas || 0,
           currentKhatmas: data.total_khatmas - data.completed_khatmas || 0, // Approximate
@@ -26,7 +26,7 @@ const Stats = () => {
         });
         setLoading(false);
       } catch (err) {
-        setError('Failed to load stats. Please try again.');
+        setError("Failed to load stats. Please try again.");
         setLoading(false);
       }
     };
@@ -34,8 +34,7 @@ const Stats = () => {
   }, []);
 
   if (loading) return <div>Loading stats...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
-
+  if (error) return <div style={{ color: "red" }}>{error}</div>;
 
   return (
     <div className="stats-container">
