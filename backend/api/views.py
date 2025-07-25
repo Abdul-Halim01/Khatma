@@ -60,7 +60,8 @@ class KhatmaListCreateView(generics.ListCreateAPIView):
         
         if filter_type == 'my_khatmas':
             queryset = queryset.filter(
-                Q(creator=self.request.user) | Q(participants=self.request.user)
+                Q(creator=self.request.user) | Q(participants=self.request.user),
+                status='active',
             ).distinct()
         elif filter_type == 'public':
             queryset = queryset.filter(is_public=True)
@@ -72,8 +73,8 @@ class KhatmaListCreateView(generics.ListCreateAPIView):
 
         elif filter_type == 'completed':
             return queryset.filter(
-                Q(creator=user) | Q(participants=user),
-                status='completed' 
+               Q(creator=self.request.user) | Q(participants=self.request.user),
+                status='completed' ,
             ).distinct()
         
         return queryset
@@ -167,6 +168,7 @@ def leave_khatma(request, khatma_id):
     return Response({'message': 'Successfully left khatma'}, status=status.HTTP_200_OK)
 
 # Reading Session Views
+# Reading Session Views
 class ReadingSessionListCreateView(generics.ListCreateAPIView):
     """List reading sessions or create a new one"""
     serializer_class = ReadingSessionSerializer
@@ -187,6 +189,42 @@ class ReadingSessionListCreateView(generics.ListCreateAPIView):
         
         return queryset.order_by('-reading_date')
 
+    def list(self, request, *args, **kwargs):
+        """Override list method to include khatma creator name"""
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        # Get khatma creator name if khatma_id is provided
+        khatma_creator_name = None
+        khatma_id = self.kwargs.get('khatma_id')
+        if khatma_id:
+            try:
+                khatma = Khatma.objects.select_related('creator').get(id=khatma_id)
+                khatma_creator_name = khatma.creator.fullname
+            except Khatma.DoesNotExist:
+                pass
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            response = self.get_paginated_response(serializer.data)
+            
+            # Add creator name to the response
+            if khatma_creator_name:
+                response.data['khatma_creator_name'] = khatma_creator_name
+            
+            return response
+
+        serializer = self.get_serializer(queryset, many=True)
+        response_data = {
+            'results': serializer.data
+        }
+        
+        # Add creator name to the response
+        if khatma_creator_name:
+            response_data['khatma_creator_name'] = khatma_creator_name
+            
+        return Response(response_data)
+
     def perform_create(self, serializer):
         khatma_id = self.kwargs.get('khatma_id')
         khatma = get_object_or_404(Khatma, id=khatma_id)
@@ -198,6 +236,7 @@ class ReadingSessionListCreateView(generics.ListCreateAPIView):
         # Pass khatma to serializer context for validation
         serializer.context['khatma'] = khatma
         serializer.save(khatma=khatma)
+
 
 # User Stats Views
 @api_view(['GET'])
@@ -601,7 +640,7 @@ def completed_khatma(request):
                 status='completed' 
             ).distinct()
     
-    pass
+    
 
 class CompletedKhatmaUserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
